@@ -326,6 +326,8 @@ Record features intentionally excluded from this project.
 
 After implementation or testing, record requirement changes and the evidence that prompted them. Update the screen drawings when a material layout or interaction changes.
 
+- **2026-10-04 (planning): R33 added, test forecast mode** (approved by the Developer). The plan uses saved test forecasts to verify thresholds and states, and to give usability testers identical weather. *Requirement:* with `?fixture=<name>` in the URL, the app loads a saved forecast instead of Open-Meteo, and a visible banner reads **"Test data, not live weather."** Without the parameter, only live data is used (R1), and nothing in the app links to test mode. ✓ `?fixture=storm-evening` shows the banner and the stored values. The normal URL shows no banner and makes live requests.
+
 ## Approval
 
 The Developer reviews and explicitly approves this specification and its screen designs before planning begins.
