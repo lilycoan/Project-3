@@ -181,6 +181,16 @@ Once the recommendation categories are chosen, estimate the art needed: the char
 
 Record new evidence or changed decisions and explain why they changed.
 
+- **2026-10-04: checkable reminders added** (from the Developer's screen sketches). Reminders can be ticked off like a packing list, because the context of use involves being out for hours and needing to bring items such as an umbrella, sunscreen and water. Check marks are kept only while the page is open and reset on reload, so the app still saves only the most recent location on the device, as the brief requires. *Trade-off:* a second extra feature beyond the Day/Evening choice, adding build and test scope.
+- **2026-10-04: Nominatim added for reverse geocoding.** *New evidence:* Open-Meteo's [geocoding API](https://open-meteo.com/en/docs/geocoding-api) only searches by name or postal code, so "use my location" would have no place name to show. Alternatives checked:
+  - **[US Census geocoder](https://geocoding.geo.census.gov/geocoder/):** returned "Austin city, Texas" but sends no CORS header, so browsers block it.
+  - **[Nominatim](https://operations.osmfoundation.org/policies/nominatim/):** returned "Austin, Texas" with CORS allowed. Its terms: at most 1 request/second across all Users, the app must identify itself (browser Referer), results must be cached, no autocomplete, and © OpenStreetMap contributors (ODbL) attribution is required. Per the [OSMF Privacy Policy](https://osmfoundation.org/wiki/Privacy_Policy) it logs IP, browser, referrer and time, keeps usage details 180 days, and doesn't share them except with service providers or by law.
+
+  *Decision:* use Nominatim only for one reverse lookup per "use my location" tap. *Trade-off:* a second provider to credit and disclose in privacy notes, in exchange for showing a clear place name.
+- **2026-10-04: artwork approach changed to a hybrid character.** *New evidence:* the [`react-peeps`](https://github.com/CeamKrier/react-peeps) package (MIT; Open Peeps art is CC0) file list shows that Open Peeps standing poses have their clothing drawn into the pose. Only bust poses have swappable tops (e.g., `Hoodie`, `Sweater`, `Dress`, `ShirtCoat`), and there are no separate shorts, skirts, shoes or tied jackets. The approved 12 head-to-toe outfits and add-ons can't be built from Open Peeps alone.
+
+  *Decision:* the character combines an Open Peeps head, hair and face (CC0) with an **original simple SVG body, clothing and add-ons**, drawn to match Open Peeps' line style and created with AI assistance from the Developer's direction. Icons are unchanged (Meteocons MIT, Lucide ISC). *Trade-off:* more original SVG work than planned, in exchange for full outfits and reliable layering.
+
 ## Approval
 
 The Developer reviews the sources and decisions, corrects this file, and explicitly approves it before specification begins.
