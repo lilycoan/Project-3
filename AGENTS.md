@@ -46,4 +46,9 @@ When the Developer directs the Agent to save the transcript, save the entire cur
 
 # Project
 
-Fill in as the project takes shape: how to run it locally, how to test it, and any commands or structure that aren't obvious from the code.
+WearCast: a static site (plain HTML, CSS and ES-module JavaScript), no build step and no dependencies. GitHub Pages serves the repo root.
+
+- **Run locally:** `python3 -m http.server 8000` from the repo root, then open `http://localhost:8000`. ES modules and device location need a server; opening `index.html` directly won't work.
+- **Tests:** `node --test` (Node 18+). It finds `tests/*.test.js` by default. Don't pass `tests/`, because Node 24 treats a folder argument as a file and fails.
+- **Test forecasts:** add `?fixture=<name>` to the URL to load `fixtures/<name>.json` instead of live weather (from CP2).
+- **Structure:** see the Approach section of `plan.md`.

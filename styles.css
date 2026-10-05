@@ -1,0 +1,97 @@
+/* WearCast: soft neutral direction (R32).
+   Contrast on --bg, checked at CP1: --text 13.8:1, --text-muted 6.6:1, --accent 5.4:1, --line 3.2:1. */
+:root {
+  --bg: #fbf6ec;          /* cream */
+  --surface: #fffdf8;     /* cards and tiles */
+  --text: #2b2722;
+  --text-muted: #5e574d;
+  --accent: #8a5a3c;      /* muted clay: selected states, links, focus */
+  --line: #948a7c;        /* control borders (3:1 minimum) */
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius: 12px;
+  --gap: 16px;
+  --target: 44px;         /* minimum touch target (R30) */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: env(safe-area-inset-top, 0px) max(var(--gap), env(safe-area-inset-right, 0px))
+    env(safe-area-inset-bottom, 0px) max(var(--gap), env(safe-area-inset-left, 0px));
+}
+
+[hidden] {
+  display: none !important;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Hidden visually but still read by screen readers. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.app-header {
+  padding-block: var(--gap);
+}
+
+.app-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.placeholder {
+  color: var(--text-muted);
+}
+
+/* Laptop layout (R29). Filled in at CP8. */
+@media (min-width: 768px) {
+  body {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

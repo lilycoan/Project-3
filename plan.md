@@ -47,11 +47,11 @@ tests/*.test.js       node --test unit tests for recommend.js and variation.js
 **Data flow:** follows `spec.md`. A location produces one Open-Meteo request (7 days hourly + current). The date and window select the window hours, `recommend.js` builds the single recommendation state, and `render.js` draws every output from that state only (R11).
 
 **Verification:**
-- **Logic:** unit tests with Node's built-in runner (`node --test tests/`, no installs) for every rule and threshold edge (39/40%, UV 2.9/3, 79/80°F, 19/20 mph, 29/30 mph gusts), window hours, and variation independence and stability.
+- **Logic:** unit tests with Node's built-in runner (`node --test`, no installs) for every rule and threshold edge (39/40%, UV 2.9/3, 79/80°F, 19/20 mph, 29/30 mph gusts), window hours, and variation independence and stability.
 - **Screens:** test forecasts loaded with `?fixture=<name>` show each category, add-on, reminder and state in the browser, with a visible "Test data, not live weather" banner. They also stay available on the deployed site for consistent usability tests.
 - **Manual:** browser DevTools (network blocking, throttling, location simulation, device sizes), axe DevTools, keyboard-only and VoiceOver walkthroughs, and real-phone and laptop checks of the deployed URL.
 
-**Running locally:** `python3 -m http.server 8000` from the repo root, then open `http://localhost:8000`. Device location works on `localhost`. Tests: `node --test tests/`.
+**Running locally:** `python3 -m http.server 8000` from the repo root, then open `http://localhost:8000`. Device location works on `localhost`. Tests: `node --test`.
 
 **Task order:** set up and deploy an empty shell first to prove HTTPS and Pages, then logic with tests, then a character art prototype for Developer review, then the phone Main screen, laptop layout, location flows, states, Info, an accessibility pass, deploy, usability tests and revision. Art runs alongside from checkpoint 3.
 
@@ -144,6 +144,8 @@ Follow-ups after the tasks: "What, if anything, was confusing?" "What would make
 ## Revisions
 
 Record material plan changes and why they were made.
+
+- **2026-10-05 (CP1): test command changed to `node --test`.** `node --test tests/` fails on Node 24 (it treats the folder as a file). Plain `node --test` finds `tests/*.test.js` by default.
 
 ## Saving transcripts
 

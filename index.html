@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>WearCast</title>
+  <meta name="description" content="WearCast suggests what to wear and bring for your day or evening, based on the forecast.">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <!-- Status messages (loading, errors, new location) are announced here (R31). -->
+  <div id="status" class="visually-hidden" role="status" aria-live="polite"></div>
+
+  <header class="app-header">
+    <h1 class="app-name">WearCast</h1>
+  </header>
+
+  <main id="main-screen" class="screen">
+    <p class="placeholder">What should I wear today?</p>
+  </main>
+
+  <section id="info-screen" class="screen" aria-labelledby="info-title" hidden>
+    <h2 id="info-title">About this app</h2>
+  </section>
+</body>
+</html>
