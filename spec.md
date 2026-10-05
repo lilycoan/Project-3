@@ -26,7 +26,7 @@ WearCast helps college students in Austin decide what to wear, and what to bring
 
 Draw every proposed screen by hand, in both phone and laptop layouts, on paper, a tablet, a whiteboard, or another hand-drawing surface. Save photos or exports in `reference/`, provide them to the Agent, and link them here. Use the drawings to define layout, hierarchy, controls, navigation, and important interaction states.
 
-Hand-drawn by the Developer on 2026-10-04. The HEIC originals are kept in `reference/`; the JPG copies below are for viewing.
+Hand-drawn by the Developer on 2026-10-04. Photos are stored as JPG in `reference/` (the original HEIC photos were removed from the repo and remain in git history at commit `41f9ac8`).
 
 | Drawing | Shows |
 |---|---|
