@@ -34,6 +34,7 @@ styles.css            cream palette, phone layout, laptop layout at ≥ 768 px
 js/app.js             wires inputs → state → render; screen switching
 js/api.js             Open-Meteo forecast + geocoding, Nominatim reverse lookup, 10 s timeout
 js/recommend.js       pure functions: window hours, weather inputs, condition ranking, rules, state
+js/content.js         outfit and reminder wording (3 each)
 js/variation.js       in-memory random picks and check marks keyed by date|window
 js/render.js          draws character layers, icons, text, reminders, states from the state
 js/storage.js         save/restore the most recent location only
@@ -148,6 +149,13 @@ Record material plan changes and why they were made.
 - **2026-10-05 (CP1): test command changed to `node --test`.** `node --test tests/` fails on Node 24 (it treats the folder as a file). Plain `node --test` finds `tests/*.test.js` by default.
 - **2026-10-09 (CP2): test forecasts are moved to start today.** A fixture is a saved Open-Meteo response with a `fixture` block (description, location). On load, its dates are shifted so the first day is today in the fixture's time zone, and the hours and values are kept. This means `?fixture=usability` shows the same weather for "tomorrow morning" and "Friday evening" whatever day a session runs. The real clock is still used for "Now" and remaining hours. *Developer to review.*
 - **2026-10-09 (CP2): temporary DevTools helper.** `app.js` exposes `wearcast.choose()`, `searchPlaces()` and `reverseLookup()` so the data layer can be checked before the location controls exist. It is removed in CP9.
+- **2026-10-09 (CP3): rule details where the spec was open.** *Developer to review.*
+  - **Window edges included:** Day uses the 8am through 8pm readings (13 hours), Evening 5pm through 11pm (7 hours). For today, the current hour counts as remaining, so Day "ends" at 9pm.
+  - **No feels-like data at all** for a window is shown as the missing-data error. A single missing value only blanks its tile (R23).
+  - **Eight conditions, not seven:** the ranking in the spec lists 8 conditions and *Assets* lists 8 icons. The code uses all 8.
+  - **"Bring a light layer for …"** is "this morning" / "the morning" when the low is before noon in Day, "this evening" / "the evening" otherwise, and "later tonight" / "later that night" for an Evening low from 8pm.
+  - **`{time}`** is the first hour reaching the rain peak.
+- **2026-10-09 (CP3): `js/content.js` added** for outfit and reminder wording, so copy can change without touching the rules in `recommend.js`.
 
 ## Saving transcripts
 
