@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 -100 840 3060">
+<!-- Add-on: light jacket tied at the waist (layer). Original SVG for WearCast. -->
+<g fill="#8fa3b8" stroke="#2b2722" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+  <!-- jacket back, showing at the hips -->
+  <path d="M300 1440 C290 1560 286 1680 296 1780 L360 1760 C356 1660 360 1560 370 1460 Z"/>
+  <path d="M694 1440 C704 1560 708 1680 698 1780 L634 1760 C638 1660 634 1560 624 1460 Z"/>
+  <!-- sleeves wrapped round the waist -->
+  <path d="M302 1410 C380 1440 440 1450 494 1452 C548 1450 610 1440 692 1410 L696 1480
+           C612 1508 552 1518 494 1520 C436 1518 378 1508 298 1480 Z"/>
+  <!-- knot and hanging sleeve ends -->
+  <path d="M462 1440 C476 1430 514 1430 528 1440 C540 1470 540 1500 528 1528 C514 1538 476 1538 462 1528 C450 1500 450 1470 462 1440 Z"/>
+  <path d="M470 1524 C452 1600 440 1680 446 1760 L500 1766 C500 1690 500 1610 498 1530 Z"/>
+  <path d="M520 1524 C540 1600 556 1680 554 1752 L504 1760 C502 1690 500 1610 498 1530 Z"/>
+</g>
+</svg>

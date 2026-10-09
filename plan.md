@@ -156,6 +156,9 @@ Record material plan changes and why they were made.
   - **"Bring a light layer for …"** is "this morning" / "the morning" when the low is before noon in Day, "this evening" / "the evening" otherwise, and "later tonight" / "later that night" for an Evening low from 8pm.
   - **`{time}`** is the first hour reaching the rain peak.
 - **2026-10-09 (CP3): `js/content.js` added** for outfit and reminder wording, so copy can change without touching the rules in `recommend.js`.
+- **2026-10-09 (CP4): how the character is built.** Every character piece is its own SVG file in one shared viewBox (`80 -100 840 3060`, the Open Peeps head coordinates). The pieces are stacked as `<img>` layers in this order: body → outfit → layer → head → sunglasses → hat → umbrella. The heads and sunglasses are rendered from `react-peeps` to plain SVG in a scratch folder, so React is never part of the app. The umbrella is drawn closed and hanging from the hand, so it never covers the head or the text.
+- **2026-10-09 (CP4): icons are static.** Meteocons v2.0.0 icons are animated. The copies in `assets/icons/` have their animation removed, which suits reduced motion (R31) and keeps the page still. Both fill and line styles are in the repo until the Developer picks one, and the other set is then deleted.
+- **2026-10-09 (CP4): `art-test.html`** is the art review page. It isn't linked from the app and is marked `noindex`.
 
 ## Saving transcripts
 

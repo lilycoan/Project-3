@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 -100 840 3060">
+<!-- Warm 1: tee, light chinos, sneakers. Original SVG for WearCast. -->
+<g stroke="#2b2722" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+  <!-- light chinos -->
+  <path fill="#ddc9a3" d="M316 1420 L678 1420 C690 1800 680 2300 660 2770 L524 2770
+        C516 2320 506 1920 497 1610 C488 1920 478 2320 470 2770 L334 2770 C314 2300 304 1800 316 1420 Z"/>
+  <path fill="none" d="M497 1440 L497 1610"/>
+  <!-- sneakers -->
+  <path fill="#ffffff" d="M340 2756 L470 2756 C478 2800 492 2826 530 2842 C560 2856 560 2906 524 2906 L346 2906
+        C328 2906 326 2880 340 2756 Z"/>
+  <path fill="#ffffff" d="M526 2756 L656 2756 C664 2800 678 2826 716 2842 C746 2856 746 2906 710 2906 L532 2906
+        C514 2906 512 2880 526 2756 Z"/>
+  <path fill="none" d="M334 2878 L552 2878 M520 2878 L738 2878"/>
+  <!-- tee sleeves (drawn first, the body of the tee overlaps them at the armholes) -->
+  <path fill="#a9bba0" d="M334 600 C298 652 276 770 266 904 L366 922 C368 846 374 776 388 724 Z"/>
+  <path fill="#a9bba0" d="M660 600 C696 652 718 770 728 904 L628 922 C626 846 620 776 606 724 Z"/>
+  <!-- tee body, hem over the waistband -->
+  <path fill="#a9bba0" d="M432 588 L334 600 C356 680 370 770 372 860 C366 1060 330 1300 322 1474
+        L672 1474 C664 1300 628 1060 622 860 C624 770 638 680 660 600 L562 588 C540 646 454 646 432 588 Z"/>
+  <!-- neckline -->
+  <path fill="none" d="M438 594 C472 650 524 650 556 594"/>
+</g>
+</svg>

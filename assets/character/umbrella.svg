@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 -100 840 3060">
+<!-- Add-on: closed umbrella held in the character's left hand (viewer's right). Original SVG for WearCast.
+     The hand is redrawn on top so it grips the handle. -->
+<g stroke="#2b2722" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+  <!-- shaft and tip -->
+  <path fill="none" d="M700 1440 L742 2380"/>
+  <!-- folded canopy -->
+  <path fill="#8a5a3c" d="M706 1600 C740 1640 770 1900 772 2160 C772 2230 760 2290 742 2330
+        C722 2290 708 2230 704 2160 C700 1900 690 1680 706 1600 Z"/>
+  <path fill="none" d="M716 1700 C730 1880 738 2080 740 2280"/>
+  <!-- strap -->
+  <path fill="#8a5a3c" d="M704 1960 L770 1950 L772 1996 L706 2006 Z"/>
+  <!-- crook handle around the hand -->
+  <path fill="none" stroke-width="22" d="M700 1440 C700 1400 690 1370 666 1370 C644 1370 634 1390 636 1412"/>
+  <!-- hand over the handle -->
+  <path fill="#ffffff" d="M714 1384 C732 1420 730 1484 700 1504 C672 1522 640 1502 638 1462 C636 1430 642 1400 644 1384 Z"/>
+  <path fill="none" stroke-width="10" d="M652 1440 C668 1448 688 1448 702 1438"/>
+</g>
+</svg>

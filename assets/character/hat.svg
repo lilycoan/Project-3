@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 -100 840 3060">
+<!-- Add-on: wide-brim sun hat. Original SVG for WearCast. -->
+<g stroke="#2b2722" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+  <!-- brim -->
+  <path fill="#e8d4a2" d="M150 236 C170 186 300 160 460 160 C620 160 750 180 770 226
+        C780 256 700 270 600 262 C520 256 420 256 330 266 C230 276 140 268 150 236 Z"/>
+  <!-- crown -->
+  <path fill="#e8d4a2" d="M300 222 C296 120 360 40 462 36 C566 32 630 110 628 214 C540 236 390 238 300 222 Z"/>
+  <!-- band -->
+  <path fill="#8a5a3c" d="M302 186 C390 204 540 204 626 180 L628 214 C540 236 390 238 300 222 Z"/>
+</g>
+</svg>

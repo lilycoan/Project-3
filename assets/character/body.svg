@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 -100 840 3060">
+<!-- WearCast base body: neck, torso, arms, hands and legs. Original SVG, drawn for WearCast in Open Peeps' line style.
+     Clothing layers cover the torso and most of the limbs. Shared viewBox for every character layer. -->
+<g fill="#ffffff" stroke="#2b2722" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+  <!-- legs -->
+  <path d="M330 1400 C322 1800 334 2300 352 2790 L456 2790 C462 2300 480 1880 497 1580
+           C514 1880 532 2300 538 2790 L642 2790 C660 2300 672 1800 664 1400 Z"/>
+  <!-- torso -->
+  <path d="M330 600 C380 588 420 584 446 584 L548 584 C574 584 614 588 664 600
+           C680 760 670 960 652 1150 C660 1240 666 1340 666 1430 L328 1430 C328 1340 334 1240 342 1150
+           C324 960 314 760 330 600 Z"/>
+  <!-- arms: slightly away from the body, with a soft bend at the elbow -->
+  <path d="M332 606 C298 660 276 780 268 910 C260 1060 262 1230 280 1390 L350 1390
+           C338 1240 336 1080 346 930 C352 840 362 770 378 720"/>
+  <path d="M662 606 C696 660 718 780 726 910 C734 1060 732 1230 714 1390 L644 1390
+           C656 1240 658 1080 648 930 C642 840 632 770 616 720"/>
+  <!-- hands -->
+  <path d="M280 1384 C262 1420 264 1484 294 1504 C322 1522 354 1502 356 1462 C358 1430 352 1400 350 1384 Z"/>
+  <path d="M714 1384 C732 1420 730 1484 700 1504 C672 1522 640 1502 638 1462 C636 1430 642 1400 644 1384 Z"/>
+  <!-- neck, drawn last so it sits over the shoulders -->
+  <path d="M454 452 C458 500 454 545 446 596 C480 616 520 616 550 596 C542 545 538 500 540 452 Z"/>
+</g>
+</svg>

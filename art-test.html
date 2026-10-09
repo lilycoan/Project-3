@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WearCast art test</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Art review page (plan CP4–CP5). Not linked from the app. */
+    body { max-width: none; padding-bottom: 48px; }
+    h2 { margin-top: 40px; }
+    .note { color: var(--text-muted); max-width: 70ch; }
+    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    figure { margin: 0; padding: 12px; background: var(--surface); border: 1px solid #e4dccb; border-radius: var(--radius); text-align: center; }
+    figcaption { font-size: 0.85rem; color: var(--text-muted); max-width: 180px; margin-inline: auto; }
+    /* Every character layer shares one viewBox, so stacked images line up exactly. */
+    .character { position: relative; width: 150px; aspect-ratio: 840 / 3060; margin-inline: auto; }
+    .character.large { width: 220px; }
+    .character img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .icons img { width: 64px; height: 64px; }
+    .icons figure { padding: 8px; }
+    .lucide img { width: 32px; height: 32px; }
+    label { font-weight: 600; }
+    select { font: inherit; min-height: 44px; padding: 0 8px; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-name">WearCast art test</h1>
+    <p class="note">Review page for the character art. Every piece is a separate SVG layer stacked in the order
+      body → outfit → layer → head → sunglasses → hat → umbrella.</p>
+  </header>
+
+  <h2>1. Choose a head</h2>
+  <p class="note">Open Peeps heads (CC0). Each is shown plain and with every add-on.</p>
+  <div class="grid" id="heads"></div>
+
+  <h2>2. All add-on combinations</h2>
+  <p>
+    <label for="head-pick">Head</label>
+    <select id="head-pick"></select>
+    <label for="glasses-pick">Sunglasses</label>
+    <select id="glasses-pick">
+      <option value="wayfarer">Wayfarer</option>
+      <option value="clubmaster">Clubmaster</option>
+    </select>
+  </p>
+  <div class="grid" id="combos"></div>
+
+  <h2>3. Weather icons</h2>
+  <p class="note">Meteocons (MIT), static copies. Fill style or line style?</p>
+  <h3>Fill</h3>
+  <div class="grid icons" id="icons-fill"></div>
+  <h3>Line</h3>
+  <div class="grid icons" id="icons-line"></div>
+
+  <h3>Interface icons</h3>
+  <div class="grid icons lucide" id="icons-lucide"></div>
+
+  <script type="module">
+    const HEADS = { medium: 'Medium', afro: 'Afro', bun: 'Bun', 'short-wavy': 'Short wavy' };
+    const OUTFIT = 'outfit-warm-1';
+    const ADD_ONS = ['layer', 'umbrella', 'hat', 'sunglasses'];
+
+    /** Stack the layers for one character, in drawing order. */
+    function character({ head, glasses = 'wayfarer', layer, umbrella, hat, sunglasses }, size = '') {
+      const files = ['body', OUTFIT];
+      if (layer) files.push('layer');
+      files.push(`head-${head}`);
+      if (sunglasses) files.push(`sunglasses-${glasses}`);
+      if (hat) files.push('hat');
+      if (umbrella) files.push('umbrella');
+      const div = document.createElement('div');
+      div.className = `character ${size}`;
+      div.innerHTML = files.map((f) => `<img src="assets/character/${f}.svg" alt="">`).join('');
+      return div;
+    }
+
+    function figure(content, caption) {
+      const fig = document.createElement('figure');
+      fig.append(content);
+      fig.insertAdjacentHTML('beforeend', `<figcaption>${caption}</figcaption>`);
+      return fig;
+    }
+
+    // 1. Heads, plain and with everything on
+    const heads = document.getElementById('heads');
+    for (const [id, name] of Object.entries(HEADS)) {
+      heads.append(figure(character({ head: id }, 'large'), `${name}: plain`));
+      heads.append(figure(character({ head: id, layer: true, umbrella: true, hat: true, sunglasses: true }, 'large'), `${name}: all add-ons`));
+    }
+
+    // 2. All 16 combinations of the four add-ons for the chosen head
+    const headPick = document.getElementById('head-pick');
+    const glassesPick = document.getElementById('glasses-pick');
+    headPick.innerHTML = Object.entries(HEADS).map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
+    function drawCombos() {
+      const combos = document.getElementById('combos');
+      combos.replaceChildren();
+      for (let mask = 0; mask < 16; mask++) {
+        const on = Object.fromEntries(ADD_ONS.map((a, i) => [a, Boolean(mask & (1 << i))]));
+        const label = ADD_ONS.filter((a) => on[a]).join(', ') || 'no add-ons';
+        combos.append(figure(character({ head: headPick.value, glasses: glassesPick.value, ...on }), label));
+      }
+    }
+    headPick.addEventListener('change', drawCombos);
+    glassesPick.addEventListener('change', drawCombos);
+    drawCombos();
+
+    // 3. Icons
+    const METEOCONS = ['clear-day', 'partly-cloudy-day', 'overcast', 'fog', 'drizzle', 'rain', 'thunderstorms', 'snow', 'umbrella', 'uv-index', 'raindrop', 'wind'];
+    for (const style of ['fill', 'line']) {
+      const row = document.getElementById(`icons-${style}`);
+      for (const name of METEOCONS) {
+        const img = Object.assign(document.createElement('img'), { src: `assets/icons/meteocons-${style}/${name}.svg`, alt: '' });
+        row.append(figure(img, name));
+      }
+    }
+    const lucide = document.getElementById('icons-lucide');
+    for (const name of ['info', 'locate', 'search', 'arrow-left', 'x', 'circle-alert', 'bike']) {
+      const img = Object.assign(document.createElement('img'), { src: `assets/icons/lucide/${name}.svg`, alt: '' });
+      lucide.append(figure(img, name));
+    }
+  </script>
+</body>
+</html>
