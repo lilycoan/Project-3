@@ -15,16 +15,76 @@
   <!-- Shown only in test forecast mode (?fixture=), never on the normal URL (R33). -->
   <p id="test-banner" class="test-banner" hidden>Test data, not live weather.</p>
 
-  <header class="app-header">
-    <h1 class="app-name">WearCast</h1>
-  </header>
+  <h1 class="visually-hidden">WearCast</h1>
 
-  <main id="main-screen" class="screen">
-    <p class="placeholder">What should I wear today?</p>
-  </main>
+  <div id="main-screen" class="screen main-screen">
+    <!-- Always-visible context (R10) -->
+    <header class="context">
+      <div class="context-top">
+        <p class="place" id="place">WearCast</p>
+        <button type="button" class="icon-button" id="info-open" aria-label="About WearCast">
+          <img src="assets/icons/lucide/info.svg" alt="">
+        </button>
+      </div>
+      <p class="context-line">
+        <span id="date-label"></span>
+        <span class="tag" id="time-tag" hidden></span>
+        <span class="units">°F · mph</span>
+      </p>
+      <p class="source">Weather: <a href="https://open-meteo.com/">Open-Meteo</a></p>
+    </header>
 
-  <section id="info-screen" class="screen" aria-labelledby="info-title" hidden>
+    <main class="content" id="content">
+      <!-- The character is the focus of Main (R12). Its text alternative describes the outfit drawn (R31). -->
+      <section class="character-card" aria-label="Outfit">
+        <div class="character" id="character" role="img" aria-label=""></div>
+        <p class="recommendation" id="recommendation"></p>
+      </section>
+
+      <section class="weather" id="weather" aria-label="Weather for this time window">
+        <div class="feels">
+          <img class="condition-icon" id="condition-icon" src="" alt="" hidden>
+          <div>
+            <p class="label">Feels like</p>
+            <p class="feels-range" id="feels"></p>
+          </div>
+        </div>
+        <ul class="tiles">
+          <li class="tile"><span class="label">Rain</span> <span class="value" id="rain"></span></li>
+          <li class="tile"><span class="label">UV</span> <span class="value" id="uv"></span></li>
+          <li class="tile"><span class="label">Wind</span> <span class="value" id="wind"></span></li>
+        </ul>
+      </section>
+
+      <section class="reminders" aria-labelledby="reminders-title">
+        <h2 id="reminders-title">Reminders</h2>
+        <ul class="reminder-list" id="reminder-list"></ul>
+      </section>
+    </main>
+
+    <!-- Location, date and window controls sit at the bottom on phone, in thumb reach (R30). -->
+    <section class="controls" aria-label="Location, date and time of day">
+      <form class="search" id="search-form" role="search">
+        <label for="place-input" class="visually-hidden">City or ZIP</label>
+        <input id="place-input" type="search" placeholder="City or ZIP" autocomplete="off" enterkeyhint="search">
+        <button type="button" class="icon-button" id="locate-button" aria-label="Use my location">
+          <img src="assets/icons/lucide/locate.svg" alt="">
+        </button>
+      </form>
+      <div class="day-strip" id="day-strip" role="group" aria-label="Date"></div>
+      <div class="window-toggle" role="group" aria-label="Time of day">
+        <button type="button" data-window="day" aria-pressed="true">Day</button>
+        <button type="button" data-window="evening" aria-pressed="false">Evening</button>
+      </div>
+    </section>
+  </div>
+
+  <section id="info-screen" class="screen info-screen" aria-labelledby="info-title" hidden>
+    <button type="button" class="back-button" id="info-close">
+      <img src="assets/icons/lucide/arrow-left.svg" alt=""> Back
+    </button>
     <h2 id="info-title">About this app</h2>
+    <p>Creator, data sources, how recommendations work, privacy and credits are added in CP11.</p>
   </section>
 </body>
 </html>

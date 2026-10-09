@@ -7,6 +7,7 @@
   --text-muted: #5e574d;
   --accent: #8a5a3c;      /* muted clay: selected states, links, focus */
   --line: #948a7c;        /* control borders (3:1 minimum) */
+  --soft-line: #e4dccb;   /* decorative card edges only */
 
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --radius: 12px;
@@ -33,8 +34,7 @@ body {
   font-family: var(--font);
   font-size: 1rem;
   line-height: 1.5;
-  padding: env(safe-area-inset-top, 0px) max(var(--gap), env(safe-area-inset-right, 0px))
-    env(safe-area-inset-bottom, 0px) max(var(--gap), env(safe-area-inset-left, 0px));
+  padding: 0 max(var(--gap), env(safe-area-inset-right, 0px)) 0 max(var(--gap), env(safe-area-inset-left, 0px));
 }
 
 [hidden] {
@@ -43,6 +43,18 @@ body {
 
 a {
   color: var(--accent);
+}
+
+p,
+h2,
+ul {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
 }
 
 :focus-visible {
@@ -75,22 +87,288 @@ a {
   text-align: center;
 }
 
-.app-header {
-  padding-block: var(--gap);
+.label {
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
 
-.app-name {
-  margin: 0;
-  font-size: 1.5rem;
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--target);
+  min-height: var(--target);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.icon-button img {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Main, phone (below 768 px) ---------- */
+
+.main-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Context: location, date, Now/Forecast, units, source (R10) */
+.context {
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+}
+
+.context-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.place {
+  font-size: 1.375rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
-.placeholder {
+.context-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
   color: var(--text-muted);
 }
 
-/* Laptop layout (R29). Filled in at CP8. */
+.tag {
+  padding: 0 8px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.source {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding-block: 12px var(--gap);
+}
+
+/* Character card: the largest element, fully above the fold at 390×844 (R12) */
+.character-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px var(--gap) var(--gap);
+  background: var(--surface);
+  border: 1px solid var(--soft-line);
+  border-radius: var(--radius);
+}
+
+.character {
+  position: relative;
+  height: clamp(220px, 46dvh, 460px);
+  aspect-ratio: 840 / 3060; /* the shared viewBox of every character layer */
+}
+
+.character img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.recommendation {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 34ch;
+}
+
+/* Weather details (R13) */
+.feels {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.condition-icon {
+  width: 64px;
+  height: 64px;
+  flex: none;
+}
+
+.feels-range {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--soft-line);
+  border-radius: var(--radius);
+}
+
+.tile .value {
+  font-weight: 600;
+}
+
+/* Reminders (R15, R17) */
+.reminders h2 {
+  font-size: 1.0625rem;
+  margin-bottom: 8px;
+}
+
+.reminder-list {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.reminder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--target);
+}
+
+.reminder img {
+  width: 36px;
+  height: 36px;
+  flex: none;
+}
+
+.reminder.none {
+  color: var(--text-muted);
+}
+
+/* Bottom controls: stay in thumb reach while the content scrolls (R30) */
+.controls {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: 8px;
+  margin-inline: calc(-1 * max(var(--gap), env(safe-area-inset-left, 0px)));
+  padding: 10px max(var(--gap), env(safe-area-inset-left, 0px)) max(10px, env(safe-area-inset-bottom, 0px));
+  background: var(--bg);
+  border-top: 1px solid var(--soft-line);
+}
+
+.search {
+  display: flex;
+  gap: 8px;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--target);
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.day-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(var(--target), 1fr));
+  gap: 4px;
+  overflow-x: auto; /* only below about 340 px, so targets stay 44 px */
+}
+
+.day-strip button,
+.window-toggle button {
+  min-height: var(--target);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.day-strip button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+
+.day-num {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.window-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.window-toggle button {
+  font-weight: 600;
+}
+
+/* Selected date and window: filled accent, not colour alone (also bold and outlined) */
+.day-strip button[aria-pressed="true"],
+.window-toggle button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ---------- Info ---------- */
+
+.info-screen {
+  padding-block: var(--gap);
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--target);
+  padding: 0 12px 0 4px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.back-button img {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Laptop layout (R29). Filled in at CP8. ---------- */
 @media (min-width: 768px) {
   body {
     max-width: 1200px;
