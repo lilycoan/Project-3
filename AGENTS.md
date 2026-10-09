@@ -51,4 +51,5 @@ WearCast: a static site (plain HTML, CSS and ES-module JavaScript), no build ste
 - **Run locally:** `python3 -m http.server 8000` from the repo root, then open `http://localhost:8000`. ES modules and device location need a server; opening `index.html` directly won't work.
 - **Tests:** `node --test` (Node 18+). It finds `tests/*.test.js` by default. Don't pass `tests/`, because Node 24 treats a folder argument as a file and fails.
 - **Test forecasts:** add `?fixture=<name>` to the URL to load `fixtures/<name>.json` instead of live weather (from CP2).
+- **Character art:** every piece in `assets/character/` shares the viewBox `80 -100 840 3060` and is stacked as `<img>` layers. Outfits are generated: edit `tools/make-outfits.py` and run `python3 tools/make-outfits.py`, rather than editing `outfit-*.svg` by hand. `art-test.html` shows every outfit and add-on combination.
 - **Structure:** see the Approach section of `plan.md`.

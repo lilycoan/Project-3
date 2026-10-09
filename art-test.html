@@ -11,17 +11,19 @@
     body { max-width: none; padding-bottom: 48px; }
     h2 { margin-top: 40px; }
     .note { color: var(--text-muted); max-width: 70ch; }
-    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
-    figure { margin: 0; padding: 12px; background: var(--surface); border: 1px solid #e4dccb; border-radius: var(--radius); text-align: center; }
-    figcaption { font-size: 0.85rem; color: var(--text-muted); max-width: 180px; margin-inline: auto; }
+    .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+    figure { margin: 0; padding: 10px; background: var(--surface); border: 1px solid #e4dccb; border-radius: var(--radius); text-align: center; }
+    figcaption { font-size: 0.85rem; color: var(--text-muted); max-width: 150px; margin-inline: auto; }
     /* Every character layer shares one viewBox, so stacked images line up exactly. */
-    .character { position: relative; width: 150px; aspect-ratio: 840 / 3060; margin-inline: auto; }
-    .character.large { width: 220px; }
+    .character { position: relative; width: 120px; aspect-ratio: 840 / 3060; margin-inline: auto; }
+    .character.large { width: 200px; }
     .character img { position: absolute; inset: 0; width: 100%; height: 100%; }
     .icons img { width: 64px; height: 64px; }
     .icons figure { padding: 8px; }
     .lucide img { width: 32px; height: 32px; }
-    label { font-weight: 600; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
+    .controls label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+    .controls input { width: 22px; height: 22px; }
     select { font: inherit; min-height: 44px; padding: 0 8px; }
   </style>
 </head>
@@ -29,48 +31,59 @@
   <header class="app-header">
     <h1 class="app-name">WearCast art test</h1>
     <p class="note">Review page for the character art. Every piece is a separate SVG layer stacked in the order
-      body → outfit → layer → head → sunglasses → hat → umbrella.</p>
+      body → outfit → layer → head → outfit top (beanie) → sunglasses → hat → umbrella.</p>
   </header>
 
-  <h2>1. Choose a head</h2>
-  <p class="note">Open Peeps heads (CC0). Each is shown plain and with every add-on.</p>
-  <div class="grid" id="heads"></div>
+  <h2>1. First visit</h2>
+  <div class="grid" id="wave"></div>
 
-  <h2>2. All add-on combinations</h2>
-  <p>
-    <label for="head-pick">Head</label>
-    <select id="head-pick"></select>
-    <label for="glasses-pick">Sunglasses</label>
-    <select id="glasses-pick">
-      <option value="wayfarer">Wayfarer</option>
-      <option value="clubmaster">Clubmaster</option>
-    </select>
-  </p>
+  <h2>2. All 12 outfits</h2>
+  <div class="controls" id="addon-toggles"></div>
+  <div class="grid" id="outfits"></div>
+
+  <h2>3. Every add-on combination for one outfit</h2>
+  <div class="controls">
+    <label for="outfit-pick">Outfit</label>
+    <select id="outfit-pick"></select>
+  </div>
   <div class="grid" id="combos"></div>
 
-  <h2>3. Weather icons</h2>
-  <p class="note">Meteocons (MIT), static copies. Fill style or line style?</p>
-  <h3>Fill</h3>
-  <div class="grid icons" id="icons-fill"></div>
-  <h3>Line</h3>
-  <div class="grid icons" id="icons-line"></div>
-
-  <h3>Interface icons</h3>
+  <h2>4. Icons</h2>
+  <p class="note">Meteocons (MIT), static copies; Lucide (ISC).</p>
+  <div class="grid icons" id="icons-meteocons"></div>
   <div class="grid icons lucide" id="icons-lucide"></div>
 
   <script type="module">
-    const HEADS = { medium: 'Medium', afro: 'Afro', bun: 'Bun', 'short-wavy': 'Short wavy' };
-    const OUTFIT = 'outfit-warm-1';
+    const OUTFITS = {
+      'hot-1': 'Hot 1: tank top, denim shorts, sandals',
+      'hot-2': 'Hot 2: linen button-up, light shorts, sneakers',
+      'hot-3': 'Hot 3: tee dress, sandals',
+      'warm-1': 'Warm 1: tee, light chinos, sneakers',
+      'warm-2': 'Warm 2: tee, mid-length skirt, sneakers',
+      'warm-3': 'Warm 3: short-sleeve button-up, light jeans, loafers',
+      'mild-1': 'Mild 1: long-sleeve tee, jeans, sneakers',
+      'mild-2': 'Mild 2: crewneck sweater, chinos, sneakers',
+      'mild-3': 'Mild 3: tee, open overshirt, jeans, boots',
+      'cold-1': 'Cold 1: sweater, puffer jacket, jeans, boots',
+      'cold-2': 'Cold 2: hoodie, wool coat, trousers, sneakers',
+      'cold-3': 'Cold 3: thermal top, fleece jacket, joggers, beanie',
+    };
+    const HAS_TOP = new Set(['cold-3']); // outfits with a piece drawn above the head
     const ADD_ONS = ['layer', 'umbrella', 'hat', 'sunglasses'];
 
     /** Stack the layers for one character, in drawing order. */
-    function character({ head, glasses = 'wayfarer', layer, umbrella, hat, sunglasses }, size = '') {
-      const files = ['body', OUTFIT];
-      if (layer) files.push('layer');
-      files.push(`head-${head}`);
-      if (sunglasses) files.push(`sunglasses-${glasses}`);
-      if (hat) files.push('hat');
-      if (umbrella) files.push('umbrella');
+    function character(outfit, on = {}, size = '') {
+      const files = ['body', `outfit-${outfit}`];
+      if (on.layer) files.push('layer');
+      files.push('head');
+      if (HAS_TOP.has(outfit)) files.push(`outfit-${outfit}-top`);
+      if (on.sunglasses) files.push('sunglasses');
+      if (on.hat) files.push('hat');
+      if (on.umbrella) files.push('umbrella');
+      return stack(files, size);
+    }
+
+    function stack(files, size = '') {
       const div = document.createElement('div');
       div.className = `character ${size}`;
       div.innerHTML = files.map((f) => `<img src="assets/character/${f}.svg" alt="">`).join('');
@@ -84,44 +97,41 @@
       return fig;
     }
 
-    // 1. Heads, plain and with everything on
-    const heads = document.getElementById('heads');
-    for (const [id, name] of Object.entries(HEADS)) {
-      heads.append(figure(character({ head: id }, 'large'), `${name}: plain`));
-      heads.append(figure(character({ head: id, layer: true, umbrella: true, hat: true, sunglasses: true }, 'large'), `${name}: all add-ons`));
-    }
+    // 1. First visit: waving body, Warm 1 with a raised sleeve, winking head
+    document.getElementById('wave').append(figure(stack(['body-wave', 'outfit-wave', 'head-wave'], 'large'), 'First visit (waving)'));
 
-    // 2. All 16 combinations of the four add-ons for the chosen head
-    const headPick = document.getElementById('head-pick');
-    const glassesPick = document.getElementById('glasses-pick');
-    headPick.innerHTML = Object.entries(HEADS).map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
+    // 2. All outfits with the chosen add-ons
+    const toggles = document.getElementById('addon-toggles');
+    toggles.innerHTML = ADD_ONS.map((a) => `<label><input type="checkbox" value="${a}"> ${a}</label>`).join('');
+    function drawOutfits() {
+      const on = Object.fromEntries([...toggles.querySelectorAll('input')].map((i) => [i.value, i.checked]));
+      document.getElementById('outfits').replaceChildren(
+        ...Object.entries(OUTFITS).map(([id, name]) => figure(character(id, on), name)),
+      );
+    }
+    toggles.addEventListener('change', drawOutfits);
+    drawOutfits();
+
+    // 3. All 16 add-on combinations for one outfit
+    const pick = document.getElementById('outfit-pick');
+    pick.innerHTML = Object.entries(OUTFITS).map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
     function drawCombos() {
-      const combos = document.getElementById('combos');
-      combos.replaceChildren();
+      const figures = [];
       for (let mask = 0; mask < 16; mask++) {
         const on = Object.fromEntries(ADD_ONS.map((a, i) => [a, Boolean(mask & (1 << i))]));
-        const label = ADD_ONS.filter((a) => on[a]).join(', ') || 'no add-ons';
-        combos.append(figure(character({ head: headPick.value, glasses: glassesPick.value, ...on }), label));
+        figures.push(figure(character(pick.value, on), ADD_ONS.filter((a) => on[a]).join(', ') || 'no add-ons'));
       }
+      document.getElementById('combos').replaceChildren(...figures);
     }
-    headPick.addEventListener('change', drawCombos);
-    glassesPick.addEventListener('change', drawCombos);
+    pick.addEventListener('change', drawCombos);
     drawCombos();
 
-    // 3. Icons
+    // 4. Icons
+    const icon = (src, name) => figure(Object.assign(document.createElement('img'), { src, alt: '' }), name);
     const METEOCONS = ['clear-day', 'partly-cloudy-day', 'overcast', 'fog', 'drizzle', 'rain', 'thunderstorms', 'snow', 'umbrella', 'uv-index', 'raindrop', 'wind'];
-    for (const style of ['fill', 'line']) {
-      const row = document.getElementById(`icons-${style}`);
-      for (const name of METEOCONS) {
-        const img = Object.assign(document.createElement('img'), { src: `assets/icons/meteocons-${style}/${name}.svg`, alt: '' });
-        row.append(figure(img, name));
-      }
-    }
-    const lucide = document.getElementById('icons-lucide');
-    for (const name of ['info', 'locate', 'search', 'arrow-left', 'x', 'circle-alert', 'bike']) {
-      const img = Object.assign(document.createElement('img'), { src: `assets/icons/lucide/${name}.svg`, alt: '' });
-      lucide.append(figure(img, name));
-    }
+    document.getElementById('icons-meteocons').append(...METEOCONS.map((n) => icon(`assets/icons/meteocons/${n}.svg`, n)));
+    const LUCIDE = ['info', 'locate', 'search', 'arrow-left', 'x', 'circle-alert', 'bike'];
+    document.getElementById('icons-lucide').append(...LUCIDE.map((n) => icon(`assets/icons/lucide/${n}.svg`, n)));
   </script>
 </body>
 </html>
