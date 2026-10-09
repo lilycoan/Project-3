@@ -146,6 +146,8 @@ Follow-ups after the tasks: "What, if anything, was confusing?" "What would make
 Record material plan changes and why they were made.
 
 - **2026-10-05 (CP1): test command changed to `node --test`.** `node --test tests/` fails on Node 24 (it treats the folder as a file). Plain `node --test` finds `tests/*.test.js` by default.
+- **2026-10-09 (CP2): test forecasts are moved to start today.** A fixture is a saved Open-Meteo response with a `fixture` block (description, location). On load, its dates are shifted so the first day is today in the fixture's time zone, and the hours and values are kept. This means `?fixture=usability` shows the same weather for "tomorrow morning" and "Friday evening" whatever day a session runs. The real clock is still used for "Now" and remaining hours. *Developer to review.*
+- **2026-10-09 (CP2): temporary DevTools helper.** `app.js` exposes `wearcast.choose()`, `searchPlaces()` and `reverseLookup()` so the data layer can be checked before the location controls exist. It is removed in CP9.
 
 ## Saving transcripts
 

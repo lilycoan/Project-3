@@ -63,6 +63,18 @@ a {
   border: 0;
 }
 
+/* Test forecast banner (R33): dark on cream-yellow so it can't be missed. */
+.test-banner {
+  margin: var(--gap) 0 0;
+  padding: 8px 12px;
+  border: 2px dashed var(--text);
+  border-radius: var(--radius);
+  background: #f6e7b0;
+  color: var(--text);
+  font-weight: 600;
+  text-align: center;
+}
+
 .app-header {
   padding-block: var(--gap);
 }
