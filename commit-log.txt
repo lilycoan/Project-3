@@ -1,0 +1,475 @@
+commit 1cdf31b5a682a321d1da52110bcdfd0c71312ad6
+Author: Lily
+Date:   2026-10-12T15:04:23-05:00
+
+Add debrief protocol
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 329320a0c1099aaf424db7aae0dfd5ac88cf769e
+Author: Lily
+Date:   2026-10-12T15:04:12-05:00
+
+Save debrief transcripts (main session and focused continuation)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 5c67597e22127c4a5f0838815666816f42db7105
+Author: Lily
+Date:   2026-10-12T11:00:09-05:00
+
+README: describe WearCast, live URL and local run; save deliverables-check transcript
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 68747b4b2f5e536a2d514ac85e78a1498330ddfc
+Author: Lily
+Date:   2026-10-11T22:45:29-05:00
+
+Save usability results and revision transcript
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit be0bd3559c95671f7d5fbe7f6a8c2c0be3873987
+Author: Lily
+Date:   2026-10-11T22:42:14-05:00
+
+Revision from usability findings: explanations in context (R35)
+
+- Day/Evening buttons show their hours; the context line shows the window
+  and the hours actually used (remaining hours for today)
+- "Based on how warm it feels, {hours}." with a "How this works" link that
+  opens Info at the method; Back returns to the same view
+- Location note with "Privacy details" under Use my location in the search
+  sheet (pinned to its bottom edge) and on the first-visit screen
+- "Finding your location…" message while the position is found
+- Info → Privacy split into Saved on this phone / Sent to weather and map
+  services / Hosting, each with a one-line summary (R20 change)
+- buildState records the hours span; 46 unit tests passing
+- spec.md: R35 and R20 change; plan.md: revision note
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 546a0d8e843fb0b42c45b991e4447d4cef9ccc04
+Author: Lily
+Date:   2026-10-11T22:34:09-05:00
+
+Record usability sessions P1–P3, findings and chosen improvement
+
+- P1–P3 notes (October 11, 2026) entered as provided by the Developer
+- Findings and chosen improvement: plain-language explanation of the
+  Day/Evening controls and a more visible privacy summary near the
+  location feature; "how to check it worked" measures
+- Improvement added to the Verify and revise checklist
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit c4dd2d7848ebafaad191bb58a422c0ac88a3b4dd
+Author: Lily
+Date:   2026-10-11T22:17:29-05:00
+
+Save usability prep transcript
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 873ee7afcfe22a8675074d2efe3de546926e004e
+Author: Lily
+Date:   2026-10-11T22:15:54-05:00
+
+Usability prep: session guide; choosing a place leaves test mode
+
+- app.js: in ?fixture= mode, choosing a place (search or Use my location)
+  saves it and reloads the normal URL, so the name always matches live
+  weather (found in a dry run: "Denver, CO" over Austin test weather)
+- plan.md: session guide (link, pre-session checklist, intro script, help
+  rule, success criteria per task, what to watch for), written-notes-only
+  recording, ready-to-fill P1–P3 tables; revision note
+- spec.md: R33 revision and added check
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 6cd8a8a37dd9b39c8c76e026a752621622be2986
+Author: Lily
+Date:   2026-10-11T22:10:53-05:00
+
+Save CP12b and requirement sweep transcript
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 2a2b7ca38579d1e0a9d25fcb1d2e71a17c9148e0
+Author: Lily
+Date:   2026-10-11T22:10:14-05:00
+
+Record the R1–R34 requirement sweep in plan.md
+
+Automated evidence for every requirement, run against the local copy and
+the deployed site at 3e3286a; items still needing the Developer's own
+check (real phone, VoiceOver, visual direction) are marked.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 3e3286a340e30aa597249dca51435c0849797199
+Author: Lily
+Date:   2026-10-11T22:04:59-05:00
+
+CP12b: Character style choice (R34)
+
+- Two looks: Short wavy (default) and Medium hair, each with its own head,
+  waving head and outfits; Short wavy swaps Hot 3 for a sleeveless tee and
+  running shorts and Warm 2 for a polo and chino shorts
+- First-visit "Choose a look" previews and a small switch in the character
+  card corner; choice saved as wearcast.style; switching keeps date, window
+  and variant number; text and alt text follow the chosen look
+- content.js outfitFor(), per-style layers in render.js, style storage
+- Info privacy and credits updated; art-test.html look picker
+- tests: 45 passing (both styles × all variants, storage keys)
+- Local server moved to 127.0.0.1:8137 (port 8000 is shared with another app)
+- spec.md: R6 check and R34 decisions; plan.md: CP12b notes, deploy cache risk
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 9a851e168f4cb2715fd067ec7ca77b1ce2a298a1
+Author: Lily
+Date:   2026-10-11T21:52:43-05:00
+
+Save CP1–CP12 build transcript
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit a937e41345e57f38c15be0b8d10677bd90a4fd87
+Author: Lily
+Date:   2026-10-11T21:51:30-05:00
+
+CP12: Controls before content for a consistent focus order
+
+- Location, date and window controls moved ahead of the content in the
+  markup; CSS order keeps them at the bottom on phone
+- Tab order on both layouts: source, info, City/ZIP, locate, dates,
+  Day/Evening, reminders (no jump back up on laptop)
+- plan.md: focus-order decision and the Developer's VoiceOver checklist
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 79fdfa90cf85dbe8b3a495f0aa673a7586c1a981
+Author: Lily
+Date:   2026-10-11T21:47:17-05:00
+
+CP12: Accessibility fixes from the axe audit and contrast check
+
+- Date buttons: visible "Mon 12" starts the accessible name; month and
+  condition added as screen-reader text (WCAG 2.5.3)
+- Loading outline: aria-hidden="true" (was an empty, invalid value)
+- Feels-like: screen-reader "High"/"low" words instead of aria-label on <p>
+- Weather condition written next to "Feels like" so pale icons never carry
+  it alone (1.4.11)
+- Placeholder text uses the muted colour (7.0:1); Info nav links 44 px
+- spec.md: R26 correction approved; plan.md: audit results
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 47cfdb8056c5301bf64b0b29465b087de83c69f1
+Author: Lily
+Date:   2026-10-11T21:42:01-05:00
+
+CP11: Info screen with sources, method, privacy and credits
+
+- Phone: ← Back and stacked sections; laptop: WearCast + ✕ Close header,
+  sticky "On this page" list beside the content (R20)
+- Creator, weather data (Open-Meteo CC BY 4.0; OSM/ODbL via Nominatim),
+  outfit and reminder tables linked to NWS, EPA and CDC, privacy (saved
+  data, 2-decimal rounding, provider logging, GitHub Pages), art credits
+  and licenses for every asset, weather.gov safety note (R26, R27)
+- Back/Close keeps place, date, window and scroll; focus moves to the
+  title on open and back to the info button on close
+- spec.md: proposed R26 correction (Nominatim retention); plan.md: CP11 notes
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit b92c7ab52573bbaf78ef10bd8528452db2fe45df
+Author: Lily
+Date:   2026-10-11T21:37:25-05:00
+
+CP10: Loading, error, ended-window and first-visit states
+
+- Status panel rendered from the state: loading (greyed outline, placeholder
+  bars, "Getting the weather…"), error with reason and Retry, ended window
+  with See Evening / See tomorrow, first visit with the waving character
+- Status changes announced in the live region; greyed outline hidden from
+  screen readers; date strip and toggle hidden until there is a forecast
+- Retry keeps date, window and variation picks
+- Fixtures: storm-evening, missing-uv, threshold edges, ended (fixed hour),
+  error-timeout (forced failure); fixture extras documented in the generator
+- plan.md: CP9 rounding approval, CP10 notes
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit e03c604d3bcb760dc02696554685022cb15beffd
+Author: Lily
+Date:   2026-10-11T21:31:10-05:00
+
+CP9: Location flows — search sheet, use my location, denied, non-US
+
+- search.js: results sheet on a native <dialog> (bottom sheet on phone,
+  panel under the header field on laptop); arrow keys, Escape, backdrop
+  close; "No US places found" keeps the field usable (R3)
+- api.js: starts-with filter (ZIP exempt), St/Ft/Mt and typed-state matching,
+  towns only, county added to duplicate labels
+- Use my location: fresh position per tap, coordinates rounded to 2
+  decimals, one cached Nominatim lookup per spot (R4); non-US message keeps
+  the previous place (R5); denied/unavailable message focuses the field
+  (R22); Nominatim failure loads "Your location" (R24); choice saved (R6)
+- Temporary first-match search and DevTools helpers removed
+- tests: 43 passing; plan.md: CP9 notes
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 603bb07ac72aabf9adc6cc27b77c55d4376b6596
+Author: Lily
+Date:   2026-10-11T21:25:56-05:00
+
+Show values rounded down so they match the reminder rules
+
+Live Austin showed "gusts 30" with no bike reminder: the raw gust was
+just under 30 and normal rounding pushed the display past the threshold.
+- recommend.js: shown() rounds down; used for reminder wording
+- render.js: tiles, feels-like and week strip use shown()
+- tests: shown values never pass an unreached threshold (41 passing)
+- spec.md: revision approved by the Developer; R13 check updated
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit bcf19a6c79221a02284bcc0217ff78802fe27406
+Author: Lily
+Date:   2026-10-11T21:24:33-05:00
+
+CP8: Laptop layout; neutral reminder wording
+
+- At 768 px and up, Main becomes a grid: header bar (name, City/ZIP, Use my
+  location, Day/Evening, info), context line, week strip with icon and
+  feels-like high/low per day for the window, character left and
+  recommendation, weather card and reminder grid right (R7, R12, R29)
+- Same markup for phone and laptop; controls wrapper dissolves on laptop
+- Week strip summaries use the same windowHours/weatherInputs as Main
+- Locate button text from 1024 px; icon-only with its name below that
+- Reminder wording: sunscreen 1 and hydration 3 made neutral (spec revision)
+- plan.md: CP8 notes
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 6fc050301bf79c6ca6fad18e053518251af97a30
+Author: Lily
+Date:   2026-10-11T21:19:12-05:00
+
+CP7: Checkable reminders; R34 style choice added to spec and plan
+
+- Reminders are real checkboxes; the whole row is the label (≥ 44 px)
+- Ticks kept in memory per date|window via variation.js, cleared on reload
+- "n of m ready" count beside the Reminders heading
+- Fix: keyboard focus is restored to the same date or reminder after each
+  render (the date strip lost focus since CP6)
+- spec.md: R34 character style choice and R6 change, approved by the Developer
+- plan.md: CP12b for the style choice; CP7 notes
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit fd831bf7dee03ca8998a560c529f02ff254bad9b
+Author: Lily
+Date:   2026-10-09T13:43:04-05:00
+
+CP6: Phone Main screen driven by the recommendation state
+
+- index.html: context header (place, date, Now/Forecast, units, source, info),
+  character card with recommendation, weather icon and tiles, reminders, and
+  bottom controls (City/ZIP + locate, 7-day strip, Day/Evening)
+- render.js: draws everything from buildState() output only (R11); missing
+  values show "—"; character layers with text alternative
+- app.js: location → one forecast request → date/window → state → render;
+  default window by local hour; temporary first-match search until CP9
+- styles.css: phone layout with sticky thumb-reach controls, 44 px targets
+- tools/make-fixtures.py + category fixtures (hot, mild-layer, cold, calm)
+- plan.md: CP5 approval, CP6 notes
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 0d3768242ed303e91815130391143995d94809e1
+Author: Lily
+Date:   2026-10-09T13:35:19-05:00
+
+CP5 (for review): All 12 outfits and the first-visit wave
+
+- CP4 choices applied: Short wavy head, Wayfarer sunglasses, Meteocons fill
+  icons; unused options removed and chosen pieces given plain names
+- tools/make-outfits.py: generates the 12 outfits (Hot/Warm/Mild/Cold x 3)
+  and the waving Warm 1 from shared garment shapes on the approved body
+- body-wave.svg and head-wave.svg (Open Peeps "Cute") for first visit
+- Cold 3 beanie drawn in a separate layer above the head
+- art-test.html: first visit, all outfits with add-on toggles, every add-on
+  combination per outfit, icons
+- plan.md: CP4 approval recorded; CP5 notes. AGENTS.md: how to regenerate outfits
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 0c0071a22de9ce1585b5f221fe528c8039b444d8
+Author: Lily
+Date:   2026-10-09T13:27:33-05:00
+
+CP4 (for review): Character art prototype and icons
+
+- assets/character: original body, Warm 1 outfit (tee, light chinos, sneakers),
+  tied jacket, sun hat and closed umbrella in one shared viewBox; four Open Peeps
+  head options and two sunglasses styles exported from react-peeps
+- assets/icons: static Meteocons (fill and line, animation removed) and Lucide
+  interface icons, with license files
+- art-test.html: head choices, all 16 add-on combinations, icon styles
+- plan.md: revisions for character layering, static icons and the test page
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit ca78b13618fbabc2bdf496bb26ff51979c38b24e
+Author: Lily
+Date:   2026-10-09T13:14:14-05:00
+
+CP3: Recommendation rules, state and variations with tests
+
+- recommend.js: window hours (remaining hours today), weather inputs with null
+  handling, condition ranking, category, layer, reminder rules, wording, ended
+  window, and buildState() producing the one recommendation state
+- content.js: 3 outfits per category and 3 wordings per reminder from the spec
+- variation.js: independent in-memory picks and check marks per date|window
+- tests: 40 passing, including every threshold edge and variation independence
+- usability fixture: weather codes aligned with the rain hours
+- plan.md: revisions recording rule details and the content.js file
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit ced5ef8563fa3c5e3fcbfe3c62127bfd564cf393
+Author: Lily
+Date:   2026-10-09T13:11:01-05:00
+
+CP2: Data layer, saved location and test forecast mode
+
+- api.js: Open-Meteo forecast (7 days hourly + current, °F/mph, local time zone),
+  US geocoding search with "City, ST" labels, Nominatim reverse lookup cached per
+  coordinate for the visit, 10 s timeout with timeout/offline/server reasons
+- storage.js: one localStorage key holding only name, lat, lon
+- fixtures.js: ?fixture=<name> loads fixtures/<name>.json, shifted to start today,
+  and shows the "Test data, not live weather" banner
+- fixtures: austin-sample (real recorded response), usability (made-up forecast)
+- tests: parsing, null handling, storage format, fixture names and date shift
+- plan.md: revisions for fixture dates and the temporary DevTools helper
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 5e047c7baf516a8a975a882c339408bbeeb0d83c
+Author: Lily
+Date:   2026-10-05T17:45:19-05:00
+
+CP1: App shell, palette, test runner and project notes
+
+- index.html shell with the WearCast header, Main and Info sections, and a live region
+- styles.css cream palette (contrast checked), system font stack, 768 px breakpoint stub
+- js/recommend.js categoryFor() with a passing edge test (node --test)
+- Folder structure for fixtures and assets
+- AGENTS.md: how to run and test; plan.md: test command revision
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit f56859ec0e2cfaed96d610d288c77fb966d4654f
+Author: Lily
+Date:   2026-10-04T20:59:19-05:00
+
+Remove HEIC sketch originals; keep JPG copies
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 4bf5c78a1d8a0acadbcaec9930059142f58783b5
+Author: Lily
+Date:   2026-10-04T20:57:58-05:00
+
+Complete and approve Project 3 implementation plan
+
+Add approach, 12 build checkpoints with checks, and usability test plan.
+Add spec revision R33 (test forecast mode). Tick all Phase 1 approvals.
+Save planning transcript.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 41f9ac8a88eaf05bfca509cb8663568d42567363
+Author: Lily
+Date:   2026-10-04T20:55:02-05:00
+
+Complete and approve Project 3 specification
+
+Add screen sketches (HEIC originals + JPG copies), requirements R1-R32 with
+acceptance checks, recommendation state, content variation, assets, and out of
+scope. Record research revisions (checkable reminders, Nominatim, hybrid art).
+Save specification transcript.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit db053f110c242efca604c3e78e278a0eaf0cab19
+Author: Lily
+Date:   2026-10-04T18:46:22-05:00
+
+Ignore macOS .DS_Store files
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 7e4b83a91dde5bee073203f77ccf7b775fcdb027
+Author: Lily
+Date:   2026-10-04T18:45:57-05:00
+
+Complete and approve Project 3 research
+
+Add context of use, user stories, six reference images with observations,
+weather/apparel/accessibility evidence, and decisions. Save research transcript.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 0c47bdad30c4a71a48959e5e859735b57e7b7ee2
+Author: Lily
+Date:   2026-10-04T15:06:15-05:00
+
+Add Project 3 template files
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+----------------------------------------
+commit 45f570e45c4340997f66e51a09966a9bee2e2ba7
+Author: Lily
+Date:   2026-10-04T15:04:24-05:00
+
+first commit
+
+----------------------------------------
