@@ -6,7 +6,8 @@ import {
   defaultWindow, nowIn, formatHour, reminderText, layerTime, buildState, shown,
 } from '../js/recommend.js';
 import { createVariations, variationKey } from '../js/variation.js';
-import { OUTFITS } from '../js/content.js';
+import { OUTFITS, STYLES, outfitFor } from '../js/content.js';
+import { characterLayers } from '../js/render.js';
 
 const TODAY = '2026-10-09';
 const TOMORROW = '2026-10-10';
@@ -194,8 +195,8 @@ test('shown values are never past a threshold their rule did not reach', () => {
 
 const location = { name: 'Austin, TX', lat: 30.27, lon: -97.74 };
 
-function stateFor(hours, { date = TOMORROW, window = 'day', now = { date: TODAY, hour: 9 }, picks = fixedPicks() } = {}) {
-  return buildState({ location, forecast: { hours }, date, window, now, picks });
+function stateFor(hours, { date = TOMORROW, window = 'day', now = { date: TODAY, hour: 9 }, picks = fixedPicks(), style } = {}) {
+  return buildState({ location, forecast: { hours }, date, window, now, picks, style });
 }
 
 test('a warm, sunny day with a cool start: outfit, layer, hat and reminders agree', () => {
@@ -231,15 +232,36 @@ test('hat and sunglasses if and only if the sunscreen reminder shows, and not wh
   }
 });
 
-test('the written recommendation names the outfit drawn, for every category and variant', () => {
-  for (const [feels, category] of [[90, 'hot'], [75, 'warm'], [60, 'mild'], [40, 'cold']]) {
-    for (const v of [0, 1, 2]) {
-      const s = stateFor(day(TOMORROW, { feels }), { picks: fixedPicks(v) });
-      assert.equal(s.category, category);
-      assert.equal(s.text.recommendation, `${OUTFITS[category][v].text}.`);
-      assert.ok(s.text.characterAlt.includes(OUTFITS[category][v].alt));
+test('the written recommendation names the outfit drawn, for every style, category and variant', () => {
+  for (const style of Object.keys(STYLES)) {
+    for (const [feels, category] of [[90, 'hot'], [75, 'warm'], [60, 'mild'], [40, 'cold']]) {
+      for (const v of [0, 1, 2]) {
+        const s = stateFor(day(TOMORROW, { feels }), { picks: fixedPicks(v), style });
+        const outfit = outfitFor(style, category, v);
+        assert.equal(s.category, category);
+        assert.equal(s.text.recommendation, `${outfit.text}.`);
+        assert.ok(s.text.characterAlt.includes(outfit.alt));
+        // The drawing uses the same outfit file and the style's head (R11, R34)
+        const layers = characterLayers(s.category, s.outfitVariant, s.addOns, s.style);
+        assert.equal(layers[1], outfit.file);
+        assert.ok(layers.includes(STYLES[style].head));
+      }
     }
   }
+});
+
+test('Short wavy swaps only the dress and the skirt; Medium keeps all 12 (R34)', () => {
+  const differs = [];
+  for (const category of ['hot', 'warm', 'mild', 'cold']) {
+    for (const v of [0, 1, 2]) {
+      const short = outfitFor('short', category, v);
+      const medium = outfitFor('medium', category, v);
+      assert.equal(medium.text, OUTFITS[category][v].text);
+      if (short.text !== medium.text) differs.push(`${category}-${v + 1}: ${short.text}`);
+    }
+  }
+  assert.deepEqual(differs, ['hot-3: Sleeveless tee, running shorts and sneakers', 'warm-2: Polo shirt, chino shorts and sneakers']);
+  assert.equal(stateFor(day(TOMORROW, { feels: 75 }), { picks: fixedPicks(1) }).style, 'short'); // default style
 });
 
 test('no reminders: an empty list, so the screen can say "Nothing extra to bring"', () => {

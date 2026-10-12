@@ -1,7 +1,7 @@
 // Draws Main from the recommendation state only (R11). No rules or weather maths here.
 
 import { shown } from './recommend.js';
-import { STATE_TEXT as T } from './content.js';
+import { STATE_TEXT as T, STYLES, outfitFor } from './content.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -54,12 +54,12 @@ export function dayLabels(date) {
 
 // ---------- Pieces ----------
 
-/** Character layers in drawing order (see AGENTS.md → Character art). */
-export function characterLayers(category, outfitVariant, addOns) {
+/** Character layers in drawing order (see AGENTS.md → Character art), for the chosen style (R34). */
+export function characterLayers(category, outfitVariant, addOns, style) {
   const outfit = `${category}-${outfitVariant + 1}`;
-  const files = ['body', `outfit-${outfit}`];
+  const files = ['body', outfitFor(style, category, outfitVariant).file];
   if (addOns.layer) files.push('layer');
-  files.push('head');
+  files.push(STYLES[style].head);
   if (OUTFIT_TOPS.has(outfit)) files.push(`outfit-${outfit}-top`);
   if (addOns.sunglasses) files.push('sunglasses');
   if (addOns.hat) files.push('hat');
@@ -117,7 +117,7 @@ function drawReminderCount(reminders) {
 }
 
 // Parts of Main are rebuilt on each render; these attributes identify a control across rebuilds.
-const FOCUS_KEYS = ['data-date', 'data-reminder'];
+const FOCUS_KEYS = ['data-date', 'data-reminder', 'data-style'];
 
 /** Remember which rebuilt control has focus, so keyboard users stay in place after a render. */
 function focusedKey() {
@@ -127,6 +127,20 @@ function focusedKey() {
 }
 
 // ---------- Main ----------
+
+/**
+ * Style choice buttons (R34): a head-and-shoulders preview of each style. The only alt text is on
+ * the head image, so each button's name is its style label. app.js handles them by data-style.
+ */
+function styleButtons(current, size) {
+  return Object.entries(STYLES).map(([id, style]) => `
+    <button type="button" class="style-button ${size}" data-style="${id}" aria-pressed="${id === current}">
+      <span class="style-preview">
+        <img src="assets/character/body.svg" alt=""><img src="assets/character/outfit-warm-1.svg" alt="">
+        <img src="assets/character/${style.head}.svg" alt="${style.label}">
+      </span>
+    </button>`).join('');
+}
 
 /** Buttons in the status panel. app.js handles them by their data-action. */
 const action = (name, text, primary = false) =>
@@ -151,7 +165,10 @@ function statusPanel(state) {
         : `<p class="status-title">${T.eveningEnded}</p>
           <div class="status-actions">${action('see-tomorrow', T.seeTomorrow, true)}</div>`;
     case 'empty':
+      // First visit: choose a look (R34), then a place (R25).
       return `<p class="status-title">${T.firstVisitTitle}</p>
+        <p class="status-text" id="choose-look">${T.chooseLook}</p>
+        <div class="style-choice" role="group" aria-labelledby="choose-look">${styleButtons(state.style, 'large')}</div>
         <p class="status-text">${T.firstVisitBody}</p>
         <div class="status-actions">${action('locate', T.useLocation, true)}${action('type-place', T.typePlace)}</div>`;
     default:
@@ -200,8 +217,13 @@ export function renderMain(state, controls) {
   const card = $('character').parentElement;
   card.hidden = status === 'error' || status === 'windowEnded';
   card.classList.toggle('is-loading', status === 'loading');
+  // The small style switch sits in the character card corner whenever an outfit is shown (R34).
+  const styleSwitch = $('style-switch');
+  styleSwitch.hidden = !ok;
+  styleSwitch.innerHTML = ok ? styleButtons(state.style, 'small') : '';
+
   if (ok) {
-    drawCharacter(characterLayers(state.category, state.outfitVariant, state.addOns), state.text.characterAlt);
+    drawCharacter(characterLayers(state.category, state.outfitVariant, state.addOns, state.style), state.text.characterAlt);
     $('recommendation').textContent = state.text.recommendation;
     drawWeather(state.weather);
     drawReminders(state.reminders);
@@ -209,7 +231,7 @@ export function renderMain(state, controls) {
   } else if (status === 'loading') {
     drawCharacter(['body', 'head'], '');
   } else if (status === 'empty') {
-    drawCharacter(['body-wave', 'outfit-wave', 'head-wave'], T.waveAlt);
+    drawCharacter(['body-wave', 'outfit-wave', STYLES[state.style].waveHead], T.waveAlt);
   }
 
   renderControls(controls);

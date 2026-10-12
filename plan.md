@@ -53,7 +53,7 @@ tests/*.test.js       node --test unit tests for recommend.js and variation.js
 - **Screens:** test forecasts loaded with `?fixture=<name>` show each category, add-on, reminder and state in the browser, with a visible "Test data, not live weather" banner. They also stay available on the deployed site for consistent usability tests.
 - **Manual:** browser DevTools (network blocking, throttling, location simulation, device sizes), axe DevTools, keyboard-only and VoiceOver walkthroughs, and real-phone and laptop checks of the deployed URL.
 
-**Running locally:** `python3 -m http.server 8000` from the repo root, then open `http://localhost:8000`. Device location works on `localhost`. Tests: `node --test`.
+**Running locally:** `python3 -m http.server 8137 --bind 127.0.0.1` from the repo root, then open `http://127.0.0.1:8137`. Device location works on `127.0.0.1`. (Changed from port 8000 at CP12b; see Revisions.) Tests: `node --test`.
 
 **Task order:** set up and deploy an empty shell first to prove HTTPS and Pages, then logic with tests, then a character art prototype for Developer review, then the phone Main screen, laptop layout, location flows, states, Info, an accessibility pass, deploy, usability tests and revision. Art runs alongside from checkpoint 3.
 
@@ -195,6 +195,15 @@ Record material plan changes and why they were made.
   6. Open Info and go Back.
 
   Also confirm the deployed look matches the approved soft-neutral direction.
+- **2026-10-11 (CP12b): character style choice built** (decisions by the Developer).
+  - **Short wavy outfits:** "Sleeveless tee, running shorts and sneakers" replaces Hot 3, and "Polo shirt, chino shorts and sneakers" replaces Warm 2. The Medium-hair look keeps all 12 outfits.
+  - **Placement:** both looks are offered on the first-visit screen, and a small two-figure switch sits in the character card corner when an outfit shows. The default is Short wavy.
+  - **Storage:** the look is saved under its own key (`wearcast.style`), alongside `wearcast.location`.
+  - **Switching:** changing look keeps the date, window and variant number.
+  - **Code:** `content.js` holds the per-style outfits (`outfitFor`), and `tools/make-outfits.py` draws the two new outfits.
+  - **Checks:** 24 browser checks, 0 axe violations, and 45 unit tests passing.
+- **2026-10-11 (CP12b): local server moved to port 8137.** Another local app answers on `127.0.0.1:8000`, so `localhost:8000` sometimes reached it instead of WearCast, and test runs failed for that reason alone.
+- **Known deploy risk: cached modules.** GitHub Pages lets browsers cache files for about 10 minutes. A visitor who had the old version open within 10 minutes of a deploy can get new and old modules mixed, which shows a blank page until they reload. *Mitigation:* wait about 10 minutes after a deploy before usability sessions, and reload once if a page is blank.
 
 ## Saving transcripts
 

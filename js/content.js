@@ -28,6 +28,37 @@ export const OUTFITS = {
   ],
 };
 
+/**
+ * Character styles (spec R34): each has its own head and its own 3 outfits per category.
+ * The Medium-hair style uses OUTFITS above; the Short wavy style swaps the dress (Hot 3) and the
+ * skirt (Warm 2) for the outfits below. `label` names each preview for screen readers.
+ */
+export const STYLES = {
+  short: { head: 'head', waveHead: 'head-wave', label: 'Short wavy hair' },
+  medium: { head: 'head-medium', waveHead: 'head-medium-wave', label: 'Shoulder-length hair' },
+};
+export const DEFAULT_STYLE = 'short'; // the original look, so returning Users see no change
+
+const STYLE_OUTFITS = {
+  short: {
+    'hot-3': { text: 'Sleeveless tee, running shorts and sneakers', alt: 'a sleeveless tee, running shorts and sneakers' },
+    'warm-2': { text: 'Polo shirt, chino shorts and sneakers', alt: 'a polo shirt, chino shorts and sneakers' },
+  },
+  medium: {},
+};
+
+/**
+ * The outfit for a style, category and variant (0–2): its text, its alt text, and the SVG file to draw.
+ * The same variant number is used in both styles, so switching style keeps the variation pick.
+ */
+export function outfitFor(style, category, variant) {
+  const key = `${category}-${variant + 1}`;
+  const swapped = STYLE_OUTFITS[style]?.[key];
+  return swapped
+    ? { ...swapped, file: `outfit-${key}-${style}` }
+    : { ...OUTFITS[category][variant], file: `outfit-${key}` };
+}
+
 /** Reminder order on screen, and three wordings each. Placeholders are filled by recommend.js. */
 export const REMINDER_TYPES = ['umbrella', 'sunscreen', 'hydration', 'bikeWind'];
 
@@ -88,7 +119,9 @@ export const STATE_TEXT = {
   seeTomorrow: 'See tomorrow',
   firstVisitTitle: 'What should I wear today?',
   firstVisitBody: 'Pick a place to get an outfit for the weather.',
+  chooseLook: 'Choose a look',
   useLocation: 'Use my location',
   typePlace: 'Type a city or ZIP',
   waveAlt: 'Character waving hello, wearing a tee, light chinos and sneakers.',
+  styleGroup: 'Character look',
 };

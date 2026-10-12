@@ -64,6 +64,8 @@
       <!-- The character is the focus of Main (R12). Its text alternative describes the outfit drawn (R31). -->
       <div class="character-card">
         <div class="character" id="character" role="img" aria-label=""></div>
+        <!-- Character style switch (R34), filled by render.js -->
+        <div class="style-switch" id="style-switch" role="group" aria-label="Character look" hidden></div>
       </div>
       <p class="recommendation" id="recommendation"></p>
 
@@ -167,7 +169,7 @@
             <thead><tr><th scope="col">Feels-like high</th><th scope="col">Outfit</th><th scope="col">Based on</th></tr></thead>
             <tbody>
               <tr><td>85°F and up</td><td>Hot: light, loose, light-colored clothes</td><td><a href="https://www.weather.gov/media/fwd/A5032_AreYouReady-HeatWave.pdf">NWS heat guidance</a></td></tr>
-              <tr><td>70–84°F</td><td>Warm: tee or short sleeves, light trousers or a skirt</td><td>—</td></tr>
+              <tr><td>70–84°F</td><td>Warm: tee, polo or short sleeves, with light trousers, shorts or a skirt</td><td>—</td></tr>
               <tr><td>55–69°F</td><td>Mild: long sleeves or a light sweater</td><td>—</td></tr>
               <tr><td>Below 55°F</td><td>Cold: warm layers and a jacket</td><td><a href="https://www.weather.gov/safety/cold-before">NWS cold safety</a></td></tr>
             </tbody>
@@ -188,14 +190,16 @@
           </table>
         </div>
         <p>Numbers are shown rounded down, so a value on screen is never past a threshold that wasn’t reached.
-          Each outfit has three versions and each reminder three wordings, picked at random and kept while you look around.</p>
+          Each outfit has three versions and each reminder three wordings, picked at random and kept while you look around.
+          The two character looks each have their own outfits; switching looks keeps the same version number.</p>
       </section>
 
       <section aria-labelledby="info-privacy">
         <h3 id="info-privacy">Privacy</h3>
         <ul>
-          <li><strong>Saved on this device:</strong> only your most recent place (its name and coordinates), in this browser’s
-            local storage. Nothing else is saved: no dates, check marks or outfit picks. No cookies, analytics or trackers.
+          <li><strong>Saved on this device:</strong> only your most recent place (its name and coordinates) and the character look
+            you chose, in this browser’s local storage. Nothing else is saved: no dates, check marks or outfit picks.
+            No cookies, analytics or trackers.
             To remove it, clear this site’s data in your browser settings.</li>
           <li><strong>Open-Meteo</strong> receives the place’s coordinates to send the forecast, and any city or ZIP you search for.
             It says its server logs, which can include coordinates and IP addresses, are deleted after 90 days and aren’t shared
@@ -216,8 +220,8 @@
           <table>
             <thead><tr><th scope="col">Art</th><th scope="col">Source</th><th scope="col">License</th></tr></thead>
             <tbody>
-              <tr><td>Character head, faces and sunglasses</td><td><a href="https://www.openpeeps.com/">Open Peeps</a> by Pablo Stanley, via <a href="https://github.com/CeamKrier/react-peeps">react-peeps</a> by Emre Çakır</td><td>CC0 (art), MIT (react-peeps)</td></tr>
-              <tr><td>Body, waving pose, 12 outfits, tied jacket, umbrella, sun hat, beanie</td><td>Original, by Lily Coan, drawn with AI assistance</td><td>—</td></tr>
+              <tr><td>Character heads (two looks), faces and sunglasses</td><td><a href="https://www.openpeeps.com/">Open Peeps</a> by Pablo Stanley, via <a href="https://github.com/CeamKrier/react-peeps">react-peeps</a> by Emre Çakır</td><td>CC0 (art), MIT (react-peeps)</td></tr>
+              <tr><td>Body, waving pose, 14 outfits, tied jacket, umbrella, sun hat, beanie</td><td>Original, by Lily Coan, drawn with AI assistance</td><td>—</td></tr>
               <tr><td>Weather and reminder icons</td><td><a href="https://github.com/basmilius/meteocons">Meteocons</a> © Bas Milius (static copies)</td><td>MIT</td></tr>
               <tr><td>Interface and bike icons</td><td><a href="https://lucide.dev/">Lucide</a></td><td>ISC</td></tr>
               <tr><td>Typography and colors</td><td>Your device’s system font; original palette</td><td>—</td></tr>

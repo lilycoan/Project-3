@@ -34,6 +34,14 @@
       body → outfit → layer → head → outfit top (beanie) → sunglasses → hat → umbrella.</p>
   </header>
 
+  <div class="controls">
+    <label for="style-pick">Character look</label>
+    <select id="style-pick">
+      <option value="short">Short wavy hair</option>
+      <option value="medium">Shoulder-length hair</option>
+    </select>
+  </div>
+
   <h2>1. First visit</h2>
   <div class="grid" id="wave"></div>
 
@@ -69,13 +77,21 @@
       'cold-3': 'Cold 3: thermal top, fleece jacket, joggers, beanie',
     };
     const HAS_TOP = new Set(['cold-3']); // outfits with a piece drawn above the head
+    // Character looks (spec R34): the Short wavy look swaps Hot 3 and Warm 2 for its own outfits.
+    const LOOKS = {
+      short: { head: 'head', waveHead: 'head-wave', swaps: { 'hot-3': 'Hot 3: sleeveless tee, running shorts, sneakers', 'warm-2': 'Warm 2: polo, chino shorts, sneakers' } },
+      medium: { head: 'head-medium', waveHead: 'head-medium-wave', swaps: {} },
+    };
+    const stylePick = document.getElementById('style-pick');
+    const look = () => LOOKS[stylePick.value];
+    const outfitName = (id) => look().swaps[id] ?? OUTFITS[id];
     const ADD_ONS = ['layer', 'umbrella', 'hat', 'sunglasses'];
 
     /** Stack the layers for one character, in drawing order. */
     function character(outfit, on = {}, size = '') {
-      const files = ['body', `outfit-${outfit}`];
+      const files = ['body', look().swaps[outfit] ? `outfit-${outfit}-${stylePick.value}` : `outfit-${outfit}`];
       if (on.layer) files.push('layer');
-      files.push('head');
+      files.push(look().head);
       if (HAS_TOP.has(outfit)) files.push(`outfit-${outfit}-top`);
       if (on.sunglasses) files.push('sunglasses');
       if (on.hat) files.push('hat');
@@ -98,7 +114,9 @@
     }
 
     // 1. First visit: waving body, Warm 1 with a raised sleeve, winking head
-    document.getElementById('wave').append(figure(stack(['body-wave', 'outfit-wave', 'head-wave'], 'large'), 'First visit (waving)'));
+    function drawWave() {
+      document.getElementById('wave').replaceChildren(figure(stack(['body-wave', 'outfit-wave', look().waveHead], 'large'), 'First visit (waving)'));
+    }
 
     // 2. All outfits with the chosen add-ons
     const toggles = document.getElementById('addon-toggles');
@@ -106,15 +124,13 @@
     function drawOutfits() {
       const on = Object.fromEntries([...toggles.querySelectorAll('input')].map((i) => [i.value, i.checked]));
       document.getElementById('outfits').replaceChildren(
-        ...Object.entries(OUTFITS).map(([id, name]) => figure(character(id, on), name)),
+        ...Object.keys(OUTFITS).map((id) => figure(character(id, on), outfitName(id))),
       );
     }
     toggles.addEventListener('change', drawOutfits);
-    drawOutfits();
 
     // 3. All 16 add-on combinations for one outfit
     const pick = document.getElementById('outfit-pick');
-    pick.innerHTML = Object.entries(OUTFITS).map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
     function drawCombos() {
       const figures = [];
       for (let mask = 0; mask < 16; mask++) {
@@ -124,7 +140,15 @@
       document.getElementById('combos').replaceChildren(...figures);
     }
     pick.addEventListener('change', drawCombos);
-    drawCombos();
+
+    function drawAll() {
+      pick.innerHTML = Object.keys(OUTFITS).map((id) => `<option value="${id}"${id === pick.value ? ' selected' : ''}>${outfitName(id)}</option>`).join('');
+      drawWave();
+      drawOutfits();
+      drawCombos();
+    }
+    stylePick.addEventListener('change', drawAll);
+    drawAll();
 
     // 4. Icons
     const icon = (src, name) => figure(Object.assign(document.createElement('img'), { src, alt: '' }), name);

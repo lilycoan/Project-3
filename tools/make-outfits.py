@@ -2,7 +2,8 @@
 """Generate WearCast's 12 outfit layers (and the waving outfit) from shared garment shapes.
 
 Run from the repo root:  python3 tools/make-outfits.py
-Writes assets/character/outfit-<category>-<1..3>.svg and outfit-wave.svg.
+Writes assets/character/outfit-<category>-<1..3>.svg and outfit-wave.svg, plus outfit-hot-3-short.svg and
+outfit-warm-2-short.svg, which replace the dress and the skirt for the Short wavy character style (spec R34).
 
 Every shape is drawn for the left side of the figure (viewer's left) where it is symmetric,
 then mirrored about the body's centre line (x = 497), so both sides always match the body in
@@ -199,6 +200,30 @@ def tank(color):
     return shape(d, color)
 
 
+def sleeveless_tee(color):
+    """Crew-neck tee with the sleeves left off: wider shoulders and a lower armhole than the tank."""
+    d = ("M432 588 L346 598 C352 650 362 700 372 760 C366 1060 330 1300 322 1474 L672 1474 "
+         "C664 1300 628 1060 622 760 C632 700 642 650 648 598 L562 588 C540 646 454 646 432 588 Z")
+    return shape(d, color) + "\n  " + crew_neck() + "\n  " + pair("M354 640 C362 690 368 730 372 760", "none", ' stroke-width="10"')
+
+
+def running_shorts(color, stripe):
+    """Short athletic shorts with a side split and a contrast side stripe."""
+    d = ("M316 1420 L678 1420 C684 1560 686 1650 684 1730 L514 1740 C508 1660 502 1630 497 1610 "
+         "C492 1630 486 1660 480 1740 L310 1730 C308 1650 310 1560 316 1420 Z")
+    stripes = pair("M318 1440 C316 1560 314 1650 314 1700", "none", f' stroke="{stripe}" stroke-width="16"')
+    splits = pair("M312 1730 L330 1690", "none", ' stroke-width="10"')
+    return "\n  ".join([shape(d, color), stripes, splits, line("M497 1440 L497 1610")])
+
+
+def polo(color):
+    """Short-sleeve polo: tee body with a flat collar and a short two-button placket."""
+    collar = pair("M432 588 L456 650 L497 622 L470 590 Z", color)
+    placket = line("M497 626 L497 760", 10)
+    buttons = "\n  ".join(f'<circle cx="497" cy="{y}" r="9" fill="{INK}" stroke="none"/>' for y in (680, 740))
+    return "\n  ".join([sleeves("short", color), top_body(color), collar, placket, buttons])
+
+
 def hood_behind():
     """Hood bunched behind the neck; the head layer is drawn over it."""
     return shape("M380 560 C380 470 430 430 497 430 C564 430 614 470 614 560 C580 600 414 600 380 560 Z",
@@ -260,6 +285,10 @@ OUTFITS = {
     "cold-3": [trousers(C["charcoal"], joggers=True), sneakers(), top_body(C["oat"]), crew_neck(),
                open_jacket(C["olive"], 1520, collar="stand")],
 }
+
+# Short wavy character style (R34): these two replace the dress (Hot 3) and the skirt (Warm 2).
+OUTFITS["hot-3-short"] = [running_shorts(C["navy"], WHITE), sneakers(), sleeveless_tee(C["lemon"])]
+OUTFITS["warm-2-short"] = [shorts(C["sand"]), sneakers(), polo(C["olive"])]
 
 # Pieces drawn above the head layer.
 TOPS = {"cold-3": [beanie(C["rust"])]}

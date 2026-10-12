@@ -1,7 +1,7 @@
 // Pure recommendation logic (spec: Recommendation state and data flow).
 // No DOM or network access, so every rule runs under `node --test`.
 
-import { OUTFITS, REMINDER_TYPES, REMINDER_WORDINGS, REMINDER_LABELS, LAYER_TIMES } from './content.js';
+import { REMINDER_TYPES, REMINDER_WORDINGS, REMINDER_LABELS, LAYER_TIMES, DEFAULT_STYLE, outfitFor } from './content.js';
 
 // ---------- Time ----------
 
@@ -158,8 +158,8 @@ export function layerTime(window, lowHour, isToday) {
 }
 
 /** The written recommendation (R14) and the character's text alternative (R31), from the same picks. */
-export function describe(category, outfitVariant, addOns, layerWhen) {
-  const outfit = OUTFITS[category][outfitVariant];
+export function describe(category, outfitVariant, addOns, layerWhen, style = DEFAULT_STYLE) {
+  const outfit = outfitFor(style, category, outfitVariant);
   const recommendation = addOns.layer
     ? `${outfit.text}. Bring a light layer for ${layerWhen}.`
     : `${outfit.text}.`;
@@ -187,10 +187,11 @@ export function describe(category, outfitVariant, addOns, layerWhen) {
  * @param window    "day" | "evening"
  * @param now       nowIn(forecast.timezone) — passed in so tests can fix the clock
  * @param picks     variation picks for this date|window: { outfitVariant, wordingFor(type), isChecked(type) }
+ * @param style     character style, "short" | "medium" (R34)
  */
-export function buildState({ location, forecast, date, window, now, picks }) {
+export function buildState({ location, forecast, date, window, now, picks, style = DEFAULT_STYLE }) {
   const isToday = date === now.date;
-  const base = { location, date, window, label: isToday ? 'Now' : 'Forecast' };
+  const base = { location, date, window, style, label: isToday ? 'Now' : 'Forecast' };
 
   const hours = windowHours(forecast.hours, date, window, now);
   if (hours.length === 0) {
@@ -232,6 +233,6 @@ export function buildState({ location, forecast, date, window, now, picks }) {
     outfitVariant: picks.outfitVariant,
     addOns,
     reminders,
-    text: describe(category, picks.outfitVariant, addOns, layerTime(window, weather.lowHour, isToday)),
+    text: describe(category, picks.outfitVariant, addOns, layerTime(window, weather.lowHour, isToday), style),
   };
 }

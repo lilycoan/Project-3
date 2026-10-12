@@ -1,10 +1,11 @@
 // WearCast entry point: wires inputs → state → render.
 
 import { fetchForecast, parseForecast, reverseLookup, ApiError } from './api.js';
-import { loadLocation, saveLocation } from './storage.js';
+import { loadLocation, saveLocation, loadStyle, saveStyle } from './storage.js';
 import { fixtureName, loadFixture, showTestBanner } from './fixtures.js';
 import { buildState, defaultWindow, nowIn, weatherInputs, windowHours } from './recommend.js';
 import { createVariations, variationKey } from './variation.js';
+import { STYLES, DEFAULT_STYLE } from './content.js';
 import { renderMain, announce, statusMessage } from './render.js';
 import { setUpSearch, openSearch } from './search.js';
 
@@ -22,6 +23,7 @@ const app = {
   loading: false,
   error: null, // ApiError reason while the forecast can't be shown
   fixedHour: null, // test forecasts only: a fixed local hour, e.g. to show an ended window
+  style: loadStyle(Object.keys(STYLES)) ?? DEFAULT_STYLE, // character style (R34)
 };
 let lastStatus = null; // announce a status only when it changes
 
@@ -50,7 +52,7 @@ function update() {
   } else if (app.error) {
     state = { status: 'error', reason: app.error, location: app.location };
   } else if (!app.forecast) {
-    state = { status: 'empty' }; // first visit (R25)
+    state = { status: 'empty', style: app.style }; // first visit (R25)
   } else {
     const now = clock();
     controls = { days: daySummaries(now), date: app.date, window: app.window };
@@ -61,6 +63,7 @@ function update() {
       window: app.window,
       now,
       picks: variations.picksFor(variationKey(app.date, app.window)),
+      style: app.style,
     });
   }
   renderMain(state, controls);
@@ -202,6 +205,17 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
   input.value = '';
 });
 document.getElementById('locate-button').addEventListener('click', useMyLocation);
+
+// Character style (R34): the first-visit choice and the switch in the character card corner.
+// Saved on the device; the date, window and variation picks stay as they are.
+document.getElementById('main-screen').addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-style]');
+  if (!button || button.dataset.style === app.style) return;
+  app.style = button.dataset.style;
+  saveStyle(app.style);
+  update();
+  announce(`Look changed to ${STYLES[app.style].label.toLowerCase()}.`);
+});
 
 // Buttons in the status panel: Retry (R23), See Evening / See tomorrow (R9), first-visit choices (R25).
 document.getElementById('status-panel').addEventListener('click', (event) => {

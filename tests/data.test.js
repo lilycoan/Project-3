@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseForecast, parsePlaces, parseReverse, forecastUrl, ApiError, parseQuery, filterPlaces } from '../js/api.js';
-import { saveLocation, loadLocation } from '../js/storage.js';
+import { saveLocation, loadLocation, saveStyle, loadStyle } from '../js/storage.js';
 import { fixtureName, rebaseFixture, shiftDate, todayIn } from '../js/fixtures.js';
 
 const austin = JSON.parse(readFileSync(new URL('../fixtures/austin-sample.json', import.meta.url)));
@@ -135,6 +135,17 @@ test('storage returns null on first visit, bad data, or no storage', () => {
   s.setItem('wearcast.location', '{not json');
   assert.equal(loadLocation(s), null);
   assert.equal(loadLocation(null), null);
+});
+
+test('the style is saved under its own key and only known styles load (R6, R34)', () => {
+  const s = fakeStorage();
+  saveLocation({ name: 'Austin, TX', lat: 30.27, lon: -97.74 }, s);
+  saveStyle('medium', s);
+  assert.deepEqual(s.keys().sort(), ['wearcast.location', 'wearcast.style']);
+  assert.equal(loadStyle(['short', 'medium'], s), 'medium');
+  s.setItem('wearcast.style', 'something-else');
+  assert.equal(loadStyle(['short', 'medium'], s), null);
+  assert.equal(loadStyle(['short', 'medium'], fakeStorage()), null); // nothing saved yet
 });
 
 test('fixtureName accepts only simple names', () => {

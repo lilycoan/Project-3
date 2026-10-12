@@ -186,6 +186,74 @@ input {
   border-radius: var(--radius);
 }
 
+/* ---------- Character style choice (R34) ---------- */
+
+.character-card {
+  position: relative;
+}
+
+/* Small switch in the card's top-right corner */
+.style-switch {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.style-choice {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.style-button {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.style-button.small {
+  width: 48px;
+  height: 56px;
+}
+
+.style-button.large {
+  width: 76px;
+  height: 88px;
+}
+
+/* Selected look: thick clay border, not colour alone (the border width changes too) */
+.style-button[aria-pressed="true"] {
+  border: 3px solid var(--accent);
+}
+
+/* Head-and-shoulders crop of the full figure: the stack is drawn larger than the button and offset */
+.style-preview {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 64px;
+  aspect-ratio: 840 / 3060;
+}
+
+.style-button.large .style-preview {
+  left: -8px;
+  top: -9px;
+  width: 98px;
+}
+
+.style-preview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .character {
   position: relative;
   height: clamp(220px, 46dvh, 460px);
