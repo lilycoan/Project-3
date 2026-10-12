@@ -560,6 +560,55 @@ input {
   justify-self: center;
 }
 
+/* ---------- Explanations in context (R35) ---------- */
+
+.window-label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.basis {
+  margin-top: -8px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.basis a,
+.location-note a {
+  display: inline-block;
+  padding-block: 12px; /* a 44 px tall tap target around a short link */
+  margin-block: -12px;
+  font-weight: 600;
+}
+
+.location-note {
+  margin: 10px 4px 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  max-width: 44ch;
+}
+
+/* Day and Evening show their hours under the name */
+.window-toggle button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+  padding-block: 4px;
+}
+
+.window-hours {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+/* Info → Privacy: each part leads with a one-line summary */
+.privacy-summary {
+  font-weight: 600;
+}
+
 /* ---------- Location notice (R5, R22) ---------- */
 
 .notice {
@@ -650,7 +699,16 @@ input {
 
 .sheet-locate {
   border-bottom: 0;
-  margin-top: 4px;
+}
+
+/* "Use my location" and its note stay pinned at the sheet's bottom edge while matches scroll */
+.sheet-footer {
+  position: sticky;
+  bottom: calc(-1 * max(var(--gap), env(safe-area-inset-bottom, 0px)));
+  margin: 4px calc(-1 * var(--gap)) 0;
+  padding: 4px var(--gap) max(var(--gap), env(safe-area-inset-bottom, 0px));
+  background: var(--bg);
+  border-top: 1px solid var(--soft-line);
 }
 
 .sheet-locate img {
@@ -898,9 +956,10 @@ th {
     grid-area: content;
     display: grid;
     grid-template-columns: minmax(300px, 5fr) 7fr;
-    grid-template-rows: auto auto auto 1fr;
+    grid-template-rows: auto auto auto auto 1fr;
     grid-template-areas:
       "character recommendation"
+      "character basis"
       "character weather"
       "character reminders"
       "character .";
@@ -928,6 +987,12 @@ th {
 
   .status-actions {
     justify-content: flex-start;
+  }
+
+  .basis {
+    grid-area: basis;
+    margin-top: -8px;
+    text-align: left;
   }
 
   .recommendation {

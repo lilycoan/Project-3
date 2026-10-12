@@ -28,6 +28,7 @@
       <p class="context-line">
         <span id="date-label"></span>
         <span class="tag" id="time-tag" hidden></span>
+        <span class="window-label" id="window-label"></span>
         <span class="units">°F · mph</span>
       </p>
       <p class="source">Weather: <a href="https://open-meteo.com/">Open-Meteo</a></p>
@@ -52,8 +53,12 @@
       </form>
       <div class="day-strip" id="day-strip" role="group" aria-label="Date"></div>
       <div class="window-toggle" role="group" aria-label="Time of day">
-        <button type="button" data-window="day" aria-pressed="true">Day</button>
-        <button type="button" data-window="evening" aria-pressed="false">Evening</button>
+        <button type="button" data-window="day" aria-pressed="true">
+          <span class="window-name">Day</span> <span class="window-hours">8am–8pm</span>
+        </button>
+        <button type="button" data-window="evening" aria-pressed="false">
+          <span class="window-name">Evening</span> <span class="window-hours">5–11pm</span>
+        </button>
       </div>
     </div>
 
@@ -68,6 +73,8 @@
         <div class="style-switch" id="style-switch" role="group" aria-label="Character look" hidden></div>
       </div>
       <p class="recommendation" id="recommendation"></p>
+      <!-- Which hours and temperature the outfit is based on (R35) -->
+      <p class="basis" id="basis" hidden></p>
 
       <!-- Loading, error, ended window and first visit (R9, R21, R23, R25); announced through #status -->
       <div class="status-panel" id="status-panel" hidden></div>
@@ -108,9 +115,14 @@
     </form>
     <p class="sheet-message" id="sheet-message" role="status"></p>
     <ul class="sheet-results" id="sheet-results"></ul>
-    <button type="button" class="sheet-locate" id="sheet-locate">
-      <img src="assets/icons/lucide/locate.svg" alt=""> Use my location
-    </button>
+    <!-- Pinned to the bottom of the sheet, so it stays visible however many places match (R35) -->
+    <div class="sheet-footer">
+      <button type="button" class="sheet-locate" id="sheet-locate">
+        <img src="assets/icons/lucide/locate.svg" alt=""> Use my location
+      </button>
+      <!-- What happens with location, filled by render.js -->
+      <p class="location-note" id="sheet-location-note"></p>
+    </div>
   </dialog>
 
   <!-- Info (R20, R26, R27): phone has ← Back; laptop has ✕ Close and an "On this page" list. -->
@@ -196,11 +208,16 @@
 
       <section aria-labelledby="info-privacy">
         <h3 id="info-privacy">Privacy</h3>
+
+        <h4>Saved on this phone</h4>
+        <p class="privacy-summary">Your last place and the look you chose. Nothing else.</p>
+        <p>Both are kept in this browser’s local storage: the place’s name and coordinates, and “short” or “medium” for the look.
+          No dates, check marks or outfit picks are saved, and there are no cookies, analytics or trackers.
+          To remove them, clear this site’s data in your browser settings.</p>
+
+        <h4>Sent to weather and map services</h4>
+        <p class="privacy-summary">Coordinates and searches go to Open-Meteo. “Use my location” also asks Nominatim, once, for the place name.</p>
         <ul>
-          <li><strong>Saved on this device:</strong> only your most recent place (its name and coordinates) and the character look
-            you chose, in this browser’s local storage. Nothing else is saved: no dates, check marks or outfit picks.
-            No cookies, analytics or trackers.
-            To remove it, clear this site’s data in your browser settings.</li>
           <li><strong>Open-Meteo</strong> receives the place’s coordinates to send the forecast, and any city or ZIP you search for.
             It says its server logs, which can include coordinates and IP addresses, are deleted after 90 days and aren’t shared
             (<a href="https://open-meteo.com/en/terms#privacy">Open-Meteo privacy</a>).</li>
@@ -209,9 +226,11 @@
             requests, including IP address and browser, and says it doesn’t share them except with service providers or as required by law.
             Its policy doesn’t give a retention period for these records
             (<a href="https://osmfoundation.org/wiki/Privacy_Policy">OSMF privacy policy</a>).</li>
-          <li><strong>GitHub Pages</strong>, which hosts WearCast, logs visitors’ IP addresses for security
-            (<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">GitHub</a>).</li>
         </ul>
+
+        <h4>Hosting</h4>
+        <p class="privacy-summary">GitHub Pages, which hosts WearCast, logs visitors’ IP addresses for security.</p>
+        <p>See <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">About GitHub Pages</a>.</p>
       </section>
 
       <section aria-labelledby="info-credits">

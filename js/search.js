@@ -51,7 +51,10 @@ export function setUpSearch({ choose, locate }) {
   sheet.addEventListener('click', (event) => {
     if (event.target === sheet) closeSearch();
   });
-  sheet.addEventListener('close', () => $('place-input').focus());
+  // Back to the field, unless a link in the sheet opened Info (then Info keeps focus).
+  sheet.addEventListener('close', () => {
+    if (!$('main-screen').hidden) $('place-input').focus();
+  });
 }
 
 /** Open the sheet and search for `text`. On laptop the panel lines up under the header field. */

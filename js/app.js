@@ -5,9 +5,9 @@ import { loadLocation, saveLocation, loadStyle, saveStyle } from './storage.js';
 import { fixtureName, loadFixture, showTestBanner } from './fixtures.js';
 import { buildState, defaultWindow, nowIn, weatherInputs, windowHours } from './recommend.js';
 import { createVariations, variationKey } from './variation.js';
-import { STYLES, DEFAULT_STYLE } from './content.js';
-import { renderMain, announce, statusMessage } from './render.js';
-import { setUpSearch, openSearch } from './search.js';
+import { STYLES, DEFAULT_STYLE, FINDING_LOCATION } from './content.js';
+import { renderMain, announce, statusMessage, locationNote } from './render.js';
+import { setUpSearch, openSearch, closeSearch } from './search.js';
 
 const fixture = fixtureName();
 // In test mode the saved forecast is loaded once and stands in for Open-Meteo (R33).
@@ -177,6 +177,7 @@ const LOCATION_OFF = 'Location is off for this site. Type a city or ZIP instead.
 
 /** "Use my location": only ever runs on a tap (R4). */
 async function useMyLocation() {
+  showNotice(FINDING_LOCATION); // shown while the browser asks and finds the position (R35)
   let position;
   try {
     position = await devicePosition();
@@ -253,12 +254,26 @@ setUpSearch({ choose: choosePlace, locate: useMyLocation });
 const mainScreen = document.getElementById('main-screen');
 const infoScreen = document.getElementById('info-screen');
 let mainScroll = 0;
-document.getElementById('info-open').addEventListener('click', () => {
+
+/** Show Info, optionally at one section (from "How this works" or "Privacy details", R35). */
+function openInfo(sectionId) {
   mainScroll = window.scrollY;
+  closeSearch();
   mainScreen.hidden = true;
   infoScreen.hidden = false;
-  window.scrollTo(0, 0);
-  document.getElementById('info-title').focus({ preventScroll: true });
+  const target = sectionId ? document.getElementById(sectionId) : document.getElementById('info-title');
+  target.tabIndex = -1;
+  target.focus({ preventScroll: true });
+  if (sectionId) target.scrollIntoView({ block: 'start' });
+  else window.scrollTo(0, 0);
+}
+
+document.getElementById('info-open').addEventListener('click', () => openInfo());
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[data-info]');
+  if (!link || !infoScreen.hidden) return; // links inside Info are ordinary in-page links
+  event.preventDefault();
+  openInfo(link.dataset.info);
 });
 document.getElementById('info-close').addEventListener('click', () => {
   infoScreen.hidden = true;
@@ -267,6 +282,7 @@ document.getElementById('info-close').addEventListener('click', () => {
   document.getElementById('info-open').focus({ preventScroll: true });
   window.scrollTo(0, mainScroll);
 });
+document.getElementById('sheet-location-note').innerHTML = locationNote();
 
 // ---------- Start ----------
 

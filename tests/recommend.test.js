@@ -270,6 +270,12 @@ test('no reminders: an empty list, so the screen can say "Nothing extra to bring
   assert.deepEqual(s.reminders, []);
 });
 
+test('the state records the hours actually used, including the rest of today (R35)', () => {
+  assert.deepEqual(stateFor(day(TOMORROW)).span, { from: 8, to: 20 });
+  assert.deepEqual(stateFor(day(TOMORROW), { window: 'evening' }).span, { from: 17, to: 23 });
+  assert.deepEqual(stateFor(day(TODAY), { date: TODAY, now: { date: TODAY, hour: 14 } }).span, { from: 14, to: 20 });
+});
+
 test('today’s ended window gives the windowEnded state with no outfit (R9)', () => {
   const s = stateFor(day(TODAY), { date: TODAY, window: 'day', now: { date: TODAY, hour: 21 } });
   assert.equal(s.status, 'windowEnded');

@@ -200,10 +200,12 @@ export function buildState({ location, forecast, date, window, now, picks, style
   }
 
   const weather = weatherInputs(hours);
+  // The hours actually used, e.g. 14–20 for the rest of today's Day window (R35).
+  const span = { from: hours[0].hour, to: hours.at(-1).hour };
   const category = categoryFor(weather.feelsHigh);
   if (category == null) {
     // Without a feels-like temperature there's no outfit to show: treat as missing data (R23).
-    return { ...base, status: 'error', reason: 'missing', weather };
+    return { ...base, status: 'error', reason: 'missing', weather, span };
   }
 
   const types = triggeredReminders(weather);
@@ -228,6 +230,7 @@ export function buildState({ location, forecast, date, window, now, picks, style
   return {
     ...base,
     status: 'ok',
+    span,
     weather,
     category,
     outfitVariant: picks.outfitVariant,

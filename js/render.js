@@ -1,7 +1,9 @@
 // Draws Main from the recommendation state only (R11). No rules or weather maths here.
 
-import { shown } from './recommend.js';
-import { STATE_TEXT as T, STYLES, outfitFor } from './content.js';
+import { shown, formatHour } from './recommend.js';
+import {
+  STATE_TEXT as T, STYLES, outfitFor, WINDOW_NAMES, BASIS, HOW_THIS_WORKS, LOCATION_NOTE, PRIVACY_DETAILS,
+} from './content.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -142,6 +144,17 @@ function styleButtons(current, size) {
     </button>`).join('');
 }
 
+/** A link that opens Info at a section; app.js handles it by data-info. */
+const infoLink = (section, text) => `<a href="#${section}" data-info="${section}">${text}</a>`;
+
+/** The note under "Use my location" (R35): in the search sheet and on the first-visit screen. */
+export function locationNote() {
+  return `${LOCATION_NOTE} ${infoLink('info-privacy', PRIVACY_DETAILS)}`;
+}
+
+/** "8am–8pm", or the remaining hours for today, from the hours the state used. */
+const spanText = (span) => `${formatHour(span.from)}–${formatHour(span.to)}`;
+
 /** Buttons in the status panel. app.js handles them by their data-action. */
 const action = (name, text, primary = false) =>
   `<button type="button" class="${primary ? 'button primary' : 'button'}" data-action="${name}">${text}</button>`;
@@ -170,7 +183,8 @@ function statusPanel(state) {
         <p class="status-text" id="choose-look">${T.chooseLook}</p>
         <div class="style-choice" role="group" aria-labelledby="choose-look">${styleButtons(state.style, 'large')}</div>
         <p class="status-text">${T.firstVisitBody}</p>
-        <div class="status-actions">${action('locate', T.useLocation, true)}${action('type-place', T.typePlace)}</div>`;
+        <div class="status-actions">${action('locate', T.useLocation, true)}${action('type-place', T.typePlace)}</div>
+        <p class="location-note">${locationNote()}</p>`;
     default:
       return '';
   }
@@ -203,11 +217,16 @@ export function renderMain(state, controls) {
     $('date-label').textContent = '';
     tag.hidden = true;
   }
+  // The window and the hours actually used, e.g. "Day, 2pm–8pm" for the rest of today (R35).
+  $('window-label').textContent = state.span
+    ? `${WINDOW_NAMES[state.window]}, ${spanText(state.span)}`
+    : (state.date ? WINDOW_NAMES[state.window] : '');
 
   const ok = status === 'ok';
   $('weather').hidden = !ok;
   $('reminders-title').parentElement.hidden = !ok;
   $('recommendation').hidden = !ok;
+  $('basis').hidden = !ok;
   $('status-panel').hidden = ok;
   $('status-panel').innerHTML = statusPanel(state);
   $('status-panel').dataset.status = status;
@@ -225,6 +244,7 @@ export function renderMain(state, controls) {
   if (ok) {
     drawCharacter(characterLayers(state.category, state.outfitVariant, state.addOns, state.style), state.text.characterAlt);
     $('recommendation').textContent = state.text.recommendation;
+    $('basis').innerHTML = `${BASIS(spanText(state.span))} ${infoLink('info-method', HOW_THIS_WORKS)}`;
     drawWeather(state.weather);
     drawReminders(state.reminders);
     drawReminderCount(state.reminders);

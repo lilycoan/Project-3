@@ -312,6 +312,11 @@ Record material plan changes and why they were made.
 - **2026-10-11 (CP12b): local server moved to port 8137.** Another local app answers on `127.0.0.1:8000`, so `localhost:8000` sometimes reached it instead of WearCast, and test runs failed for that reason alone.
 - **Known deploy risk: cached modules.** GitHub Pages lets browsers cache files for about 10 minutes. A visitor who had the old version open within 10 minutes of a deploy can get new and old modules mixed, which shows a blank page until they reload. *Mitigation:* wait about 10 minutes after a deploy before usability sessions, and reload once if a page is blank.
 - **2026-10-11 (usability prep): choosing a place leaves test mode** (approved by the Developer). A dry run showed that searching "Denver" on the test link showed "Denver, CO" over the Austin test weather. Choosing a place in test mode now saves it and reloads the normal URL, so task 3 gets live weather without a second link.
+- **2026-10-11 (revision from usability findings): explanations in context built** (spec R35 and R20 change, approved by the Developer).
+  - **Hours:** the Day and Evening buttons show their hours, the context line shows the window and the hours used ("Evening, 10pm–11pm" for the rest of today), and the "Based on how warm it feels, …" line links to *How recommendations work*.
+  - **Location:** a location note with "Privacy details" sits under "Use my location" in the search sheet (pinned to the sheet's bottom edge so it's visible with 10 matches) and on the first-visit screen. "Finding your location…" shows while the position is found.
+  - **Privacy on Info:** now has three labeled parts with one-line summaries.
+  - **Checks:** 17 new browser checks pass, and every earlier suite still passes (unit 46, axe 0, CP7, CP9, CP10, CP12b, sweep, resize).
 
 ## Saving transcripts
 

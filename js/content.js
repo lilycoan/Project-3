@@ -102,6 +102,15 @@ export const LAYER_TIMES = {
   late: { today: 'later tonight', future: 'later that night' },
 };
 
+/** Explanations in context (R35). */
+export const WINDOW_NAMES = { day: 'Day', evening: 'Evening' };
+export const BASIS = (hours) => `Based on how warm it feels, ${hours}.`;
+export const HOW_THIS_WORKS = 'How this works';
+export const LOCATION_NOTE = 'Your position is rounded to about 1 km and only used to find your city’s weather. '
+  + 'WearCast saves just your last place on this phone. You can always type a city instead.';
+export const PRIVACY_DETAILS = 'Privacy details';
+export const FINDING_LOCATION = 'Finding your location for local weather. You can type a city instead.';
+
 /** Loading, error, ended-window and first-visit copy (R9, R21, R23, R25). */
 export const STATE_TEXT = {
   loading: 'Getting the weather…',
