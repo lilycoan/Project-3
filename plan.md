@@ -106,6 +106,7 @@ Approach, build checkpoints and usability test plan approved by the Developer on
 - [ ] Prepare the usability test below *(session guide drafted by the Agent on 2026-10-11; Developer to review)*
 - [ ] Test with three peers and record each session
 - [ ] Add the chosen improvement to this checklist, and update `spec.md` if the intended result changes
+- [ ] **Improvement (from usability findings):** a concise, plain-language explanation of the Day and Evening controls, and a more visible privacy summary near the location feature. Exact wording and placement to be specified with the Developer before building.
 - [ ] Implement, verify, and redeploy at least one meaningful revision
 
 **Requirement sweep, 2026-10-11** (Agent; automated checks run against the local copy and the deployed site at commit `3e3286a`). ✅ = shown by an automated check · 👤 = still needs the Developer's own check (real phone, VoiceOver or judgement).
@@ -210,39 +211,45 @@ Follow-ups after the tasks: "What, if anything, was confusing?" "What would make
 
 **Sessions:**
 
-*P1* (date: ____)
+*P1* (October 11, 2026)
 
 | Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
 |---|---|---|---|---|
-| 1. Tomorrow morning | | | | |
-| 2. Friday evening | | | | |
-| 3. Where you are | | | | |
-| 4. Trust and privacy | | | | |
-| Follow-ups | | — | | |
+| 1. Tomorrow morning | Entered a city into the search field and looked for tomorrow's weather and outfit recommendation. Selected Day to see what to wear. | yes | Wasn't immediately sure whether Day meant the current day or morning hours. | Add a short label explaining that Day represents 8 AM–8 PM. Make the forecast date more prominent. |
+| 2. Friday evening | Selected Evening and looked for clothing recommendations and weather reminders. | with help | Was unsure whether Evening changed the forecast or only the outfit. | Add a clear explanation that Evening uses 5 PM–11 PM weather conditions to generate recommendations. |
+| 3. Where you are | Clicked Use my location and encountered the browser's location permission prompt. | yes | Wanted to know why location access was needed. | Add brief supporting text explaining that location is used to retrieve local weather and that city search is an alternative. |
+| 4. Trust and privacy | Opened About this app and navigated to Privacy to learn what information is stored. | with help | Had to scroll and read several paragraphs to understand what was saved and shared. | Make the privacy summary easier to scan, using concise headings and a prominent summary near the main interface. |
+| Follow-ups | Said the outfit recommendations were useful but wanted to understand how the app chose them. | — | The recommendation logic was not immediately obvious from the main screen. | Surface a brief explanation of how temperature, rain, UV, and wind affect recommendations. |
 
-*P2* (date: ____)
-
-| Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
-|---|---|---|---|---|
-| 1. Tomorrow morning | | | | |
-| 2. Friday evening | | | | |
-| 3. Where you are | | | | |
-| 4. Trust and privacy | | | | |
-| Follow-ups | | — | | |
-
-*P3* (date: ____)
+*P2* (October 11, 2026)
 
 | Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
 |---|---|---|---|---|
-| 1. Tomorrow morning | | | | |
-| 2. Friday evening | | | | |
-| 3. Where you are | | | | |
-| 4. Trust and privacy | | | | |
-| Follow-ups | | — | | |
+| 1. Tomorrow morning | Used the city search and looked for the weather information and recommended outfit for the following morning. | with help | Expected a separate Tomorrow option instead of having to understand the forecast and Day controls. | Make forecast dates and the selected time period easier to distinguish. Clarify that Day and Evening control the hours used for recommendations. |
+| 2. Friday evening | Switched from Day to Evening and reviewed the resulting outfit and reminders. | yes | Wanted confirmation that the recommendation reflected evening temperatures rather than the daily high. | Add a visible label explaining which hours the recommendation uses. |
+| 3. Where you are | Looked for a way to get local weather without manually typing a city or ZIP code. Found Use my location. | yes | Was concerned about whether location would be stored or repeatedly accessed. | Explain when location is requested, what is retained, and how users can choose manual search instead. |
+| 4. Trust and privacy | Opened the app information and read the privacy section, focusing on location data and third-party services. | with help | Found it difficult to distinguish information stored locally from information sent to external services. | Separate local storage, third-party weather requests, and hosting logs into clearly labeled sections. |
+| Follow-ups | Asked whether the recommendations were based on the actual forecast and whether the app tracked searches. | — | Needed more transparency about weather sources and data handling. | Provide concise explanations near the relevant features, with links to the full privacy details and data sources. |
+
+*P3* (October 11, 2026)
+
+| Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
+|---|---|---|---|---|
+| 1. Tomorrow morning | Entered a location and searched for an outfit recommendation for the next morning. Reviewed the weather conditions and reminders. | yes | Wanted to know whether the recommendation was based on the feels-like temperature or the regular temperature. | Explain more prominently that outfit recommendations use feels-like temperatures. |
+| 2. Friday evening | Switched to Evening and checked whether the suggested clothing and reminders changed. | yes | Was unsure why some reminders appeared and others did not. | Explain the conditions that trigger umbrella, sunscreen, water, and biking wind reminders. |
+| 3. Where you are | Clicked Use my location and successfully accessed local weather after granting permission. | with help | Wanted to know what would happen if location permission were denied. | Provide clear guidance for denied permissions and emphasize that city or ZIP search remains available. |
+| 4. Trust and privacy | Navigated to Privacy in About this app and looked for information about tracking and saved data. | with help | Needed to read the full section to understand that some location information is stored and that external services receive certain requests. | Add a short, plain-language privacy summary, while keeping detailed disclosures accessible. |
+| Follow-ups | Said the website was straightforward overall but suggested making the purpose of each control clearer. | — | Some behavior required reading the About section instead of being self-explanatory. | Improve labels and contextual explanations without adding unnecessary steps to the primary weather experience. |
 
 **Findings and chosen improvement:**
 
-*(Summarize the strongest findings across the three sessions, then name the improvement and the evidence for it.)*
+Across the three peer sessions, the main usability themes were clarity of the Day and Evening controls, transparency around location permissions, and the discoverability of privacy information. The testers were generally able to find the core weather and outfit features, but some controls required additional explanation. The privacy section also contained useful information that could be difficult to understand quickly because users had to read through multiple paragraphs.
+
+**Chosen improvement:** Add a concise, plain-language explanation of the Day and Evening controls and a more visible privacy summary near the location feature.
+
+This improvement addresses two important questions users may have while using WearCast: how the app generates its recommendations and what happens when they share their location. Clearer labels and contextual explanations could reduce uncertainty without adding significant complexity to the interface.
+
+**How to check the improvement worked:** In follow-up testing, record whether participants independently select the correct time period, explain what information is stored or shared, and identify an alternative to location access. Compare completion rates and the number of questions or requests for help before and after the changes.
 
 ## Revisions
 
