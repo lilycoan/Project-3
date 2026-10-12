@@ -177,6 +177,7 @@ Record material plan changes and why they were made.
 - **2026-10-11 (CP9): a fresh position on every tap.** The first version allowed a 10-minute-old position, which kept the old place when the simulated location changed. That would also break the R5 check with DevTools Sensors.
 - **2026-10-11 (CP10): states share one status panel.** Loading, error, ended window and first visit each put their message and buttons in `#status-panel`, rendered from the state. The panel is announced through the live region when the status changes. Retry keeps the date, window and variation picks (spec: *How variations are chosen and kept*). A new location starts fresh.
 - **2026-10-11 (CP10): test forecast extras.** A fixture's `fixture` block can fix the local hour (`"now": {"hour": 21}`, used by `ended`) or force a failure (`"fail": "timeout"`, used by `error-timeout`). Both work only in `?fixture=` mode. New fixtures: `storm-evening`, `missing-uv`, `edges-below`, `edges-at`, `edges-gust`, `ended`, `error-timeout`.
+- **2026-10-11 (CP11): Info content checked against sources.** The Open-Meteo terms (CC BY 4.0, 90-day logs, not shared), GitHub Pages IP logging and the Nominatim attribution requirement were re-read online. The Nominatim retention claim was wrong and is corrected (see the `spec.md` revision). All 21 Info links resolve. The phone shows ← Back and the laptop ✕ Close (one button, layout-specific text). Back/Close restores the place, date, window and scroll position, and focus returns to ⓘ.
 
 ## Saving transcripts
 

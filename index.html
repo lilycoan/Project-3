@@ -108,12 +108,121 @@
     </button>
   </dialog>
 
+  <!-- Info (R20, R26, R27): phone has ← Back; laptop has ✕ Close and an "On this page" list. -->
   <section id="info-screen" class="screen info-screen" aria-labelledby="info-title" hidden>
-    <button type="button" class="back-button" id="info-close">
-      <img src="assets/icons/lucide/arrow-left.svg" alt=""> Back
-    </button>
-    <h2 id="info-title">About this app</h2>
-    <p>Creator, data sources, how recommendations work, privacy and credits are added in CP11.</p>
+    <header class="info-header">
+      <p class="brand" aria-hidden="true">WearCast</p>
+      <button type="button" class="back-button" id="info-close">
+        <img class="phone-only" src="assets/icons/lucide/arrow-left.svg" alt="">
+        <span class="phone-only">Back</span>
+        <img class="laptop-only" src="assets/icons/lucide/x.svg" alt="">
+        <span class="laptop-only">Close</span>
+      </button>
+    </header>
+    <h2 class="info-title" id="info-title" tabindex="-1">About this app</h2>
+
+    <nav class="info-nav" aria-label="On this page">
+      <p class="info-nav-title">On this page</p>
+      <ul>
+        <li><a href="#info-creator">Creator</a></li>
+        <li><a href="#info-weather">Weather data</a></li>
+        <li><a href="#info-method">How recommendations work</a></li>
+        <li><a href="#info-privacy">Privacy</a></li>
+        <li><a href="#info-credits">Art credits and licenses</a></li>
+      </ul>
+    </nav>
+
+    <div class="info-content">
+      <p class="safety-note">WearCast isn’t a safety service. Check <a href="https://www.weather.gov/">weather.gov</a> for alerts.</p>
+
+      <section aria-labelledby="info-creator">
+        <h3 id="info-creator">Creator</h3>
+        <p>Designed and built by Lily Coan as a prototype for a clothing brand aimed at US college students.</p>
+      </section>
+
+      <section aria-labelledby="info-weather">
+        <h3 id="info-weather">Weather data</h3>
+        <p>Forecasts and place search come from <a href="https://open-meteo.com/">Open-Meteo</a>, licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Values are in °F and mph, in the place’s local time,
+          for today and the next 6 days.</p>
+        <p>For “Use my location”, the place name comes from <a href="https://nominatim.org/">Nominatim</a>.
+          Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, licensed under the
+          <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.</p>
+        <p>Forecasts are less certain further ahead. NOAA notes a 7-day forecast is right about 80% of the time
+          (<a href="https://www.nesdis.noaa.gov/about/k-12-education/weather-forecasting/how-reliable-are-weather-forecasts">NOAA NESDIS</a>).</p>
+      </section>
+
+      <section aria-labelledby="info-method">
+        <h3 id="info-method">How recommendations work</h3>
+        <p>WearCast looks at the hours you’ll be out: <strong>Day</strong> (8am–8pm) or <strong>Evening</strong> (5pm–11pm).
+          For today it uses only the hours still to come. It uses the <em>feels-like</em> temperature, because humidity and sun
+          change how heat feels (<a href="https://www.weather.gov/ama/heatindex">NWS Heat Index</a>).</p>
+
+        <h4>Outfit, from the feels-like high</h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Feels-like high</th><th scope="col">Outfit</th><th scope="col">Based on</th></tr></thead>
+            <tbody>
+              <tr><td>85°F and up</td><td>Hot: light, loose, light-colored clothes</td><td><a href="https://www.weather.gov/media/fwd/A5032_AreYouReady-HeatWave.pdf">NWS heat guidance</a></td></tr>
+              <tr><td>70–84°F</td><td>Warm: tee or short sleeves, light trousers or a skirt</td><td>—</td></tr>
+              <tr><td>55–69°F</td><td>Mild: long sleeves or a light sweater</td><td>—</td></tr>
+              <tr><td>Below 55°F</td><td>Cold: warm layers and a jacket</td><td><a href="https://www.weather.gov/safety/cold-before">NWS cold safety</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>If the feels-like low is under 70°F and in a cooler band than the high, the character carries a light layer tied at the waist.</p>
+
+        <h4>Reminders</h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Reminder</th><th scope="col">Shown when, during your hours</th><th scope="col">Based on</th></tr></thead>
+            <tbody>
+              <tr><td>Umbrella (and an umbrella in hand)</td><td>Rain chance 40% or more</td><td><a href="https://www.weather.gov/ffc/pop">NWS: what rain chance means</a></td></tr>
+              <tr><td>Sunscreen (and a sun hat and sunglasses)</td><td>UV index 3 or more</td><td><a href="https://www.epa.gov/sunsafety/uv-index-scale-0">EPA UV Index Scale</a></td></tr>
+              <tr><td>Water</td><td>Feels like 80°F or more</td><td><a href="https://www.weather.gov/ama/heatindex">NWS Heat Index</a>, <a href="https://www.cdc.gov/heat-health/about/index.html">CDC heat health</a></td></tr>
+              <tr><td>Wind, for biking</td><td>Wind 20 mph or more, or gusts 30 mph or more</td><td><a href="https://www.weather.gov/mlb/seasonal_wind_threat">NWS wind threat levels</a> and cycling guidance</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Numbers are shown rounded down, so a value on screen is never past a threshold that wasn’t reached.
+          Each outfit has three versions and each reminder three wordings, picked at random and kept while you look around.</p>
+      </section>
+
+      <section aria-labelledby="info-privacy">
+        <h3 id="info-privacy">Privacy</h3>
+        <ul>
+          <li><strong>Saved on this device:</strong> only your most recent place (its name and coordinates), in this browser’s
+            local storage. Nothing else is saved: no dates, check marks or outfit picks. No cookies, analytics or trackers.
+            To remove it, clear this site’s data in your browser settings.</li>
+          <li><strong>Open-Meteo</strong> receives the place’s coordinates to send the forecast, and any city or ZIP you search for.
+            It says its server logs, which can include coordinates and IP addresses, are deleted after 90 days and aren’t shared
+            (<a href="https://open-meteo.com/en/terms#privacy">Open-Meteo privacy</a>).</li>
+          <li><strong>“Use my location”</strong> asks your browser’s permission first. The position is rounded to about 1 km,
+            then sent once to <strong>Nominatim</strong> (OpenStreetMap Foundation) to name the place. The Foundation records
+            requests, including IP address and browser, and says it doesn’t share them except with service providers or as required by law.
+            Its policy doesn’t give a retention period for these records
+            (<a href="https://osmfoundation.org/wiki/Privacy_Policy">OSMF privacy policy</a>).</li>
+          <li><strong>GitHub Pages</strong>, which hosts WearCast, logs visitors’ IP addresses for security
+            (<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">GitHub</a>).</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="info-credits">
+        <h3 id="info-credits">Art credits and licenses</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Art</th><th scope="col">Source</th><th scope="col">License</th></tr></thead>
+            <tbody>
+              <tr><td>Character head, faces and sunglasses</td><td><a href="https://www.openpeeps.com/">Open Peeps</a> by Pablo Stanley, via <a href="https://github.com/CeamKrier/react-peeps">react-peeps</a> by Emre Çakır</td><td>CC0 (art), MIT (react-peeps)</td></tr>
+              <tr><td>Body, waving pose, 12 outfits, tied jacket, umbrella, sun hat, beanie</td><td>Original, by Lily Coan, drawn with AI assistance</td><td>—</td></tr>
+              <tr><td>Weather and reminder icons</td><td><a href="https://github.com/basmilius/meteocons">Meteocons</a> © Bas Milius (static copies)</td><td>MIT</td></tr>
+              <tr><td>Interface and bike icons</td><td><a href="https://lucide.dev/">Lucide</a></td><td>ISC</td></tr>
+              <tr><td>Typography and colors</td><td>Your device’s system font; original palette</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </section>
 </body>
 </html>

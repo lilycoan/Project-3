@@ -583,10 +583,30 @@ input {
   height: 22px;
 }
 
-/* ---------- Info ---------- */
+/* ---------- Info (R20) ---------- */
 
 .info-screen {
-  padding-block: var(--gap);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "header  title"
+    "content content";
+  align-items: center;
+  column-gap: 12px;
+  padding-block: max(12px, env(safe-area-inset-top, 0px)) 48px;
+}
+
+.info-header {
+  grid-area: header;
+}
+
+.info-header .brand {
+  display: none; /* laptop only */
+}
+
+.info-title {
+  grid-area: title;
+  font-size: 1.25rem;
 }
 
 .back-button {
@@ -594,16 +614,96 @@ input {
   align-items: center;
   gap: 6px;
   min-height: var(--target);
-  padding: 0 12px 0 4px;
-  border: 0;
-  background: none;
+  padding: 0 14px 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
   cursor: pointer;
   font-weight: 600;
 }
 
 .back-button img {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+}
+
+.laptop-only {
+  display: none;
+}
+
+.info-nav {
+  display: none; /* laptop only */
+}
+
+.info-content {
+  grid-area: content;
+  max-width: 70ch;
+  margin-top: 12px;
+  border-top: 1px solid var(--soft-line);
+}
+
+.info-content section {
+  padding-top: 20px;
+}
+
+.info-content h3 {
+  margin: 0 0 6px;
+  font-size: 1.125rem;
+  scroll-margin-top: 16px;
+}
+
+.info-content h4 {
+  margin: 14px 0 6px;
+  font-size: 1rem;
+}
+
+.info-content p,
+.info-content ul {
+  margin: 0 0 10px;
+}
+
+.info-content ul {
+  padding-left: 1.2em;
+}
+
+.info-content li {
+  margin-bottom: 8px;
+}
+
+.safety-note {
+  margin-top: 16px !important;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+
+/* Tables scroll inside their own box on narrow screens, so the page never scrolls sideways (R31) */
+.table-wrap {
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+th,
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--soft-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 700;
+  background: var(--surface);
 }
 
 /* ---------- Laptop layout, 768 px and up (R29) ----------
@@ -787,6 +887,87 @@ input {
   /* Two columns of reminders only when each column has room */
   .reminder-list {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* Laptop Info: WearCast and ✕ Close in a header bar, "On this page" list beside the content */
+@media (min-width: 768px) {
+  .info-screen {
+    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "nav    title"
+      "nav    content";
+    align-items: start;
+    column-gap: 48px;
+    padding-top: 0;
+  }
+
+  /* Header bar: WearCast left, ✕ Close right, with a rule beneath */
+  .info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--soft-line);
+  }
+
+  .info-header .brand {
+    display: block;
+    padding-block: 14px;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .info-title {
+    margin-top: 24px;
+    font-size: 1.75rem;
+  }
+
+  .phone-only {
+    display: none;
+  }
+
+  .laptop-only {
+    display: inline;
+  }
+
+  .info-nav {
+    grid-area: nav;
+    display: block;
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    padding-top: 20px;
+  }
+
+  .info-nav-title {
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .info-nav ul {
+    padding: 0;
+    list-style: none;
+    border-left: 2px solid var(--soft-line);
+  }
+
+  .info-nav a {
+    display: block;
+    padding: 6px 12px;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .info-nav a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .info-content {
+    margin-top: 0;
+    border-top: 0;
   }
 }
 

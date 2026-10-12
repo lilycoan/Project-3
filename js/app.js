@@ -229,20 +229,24 @@ document.getElementById('status-panel').addEventListener('click', (event) => {
 });
 setUpSearch({ choose: choosePlace, locate: useMyLocation });
 
-// Info screen: Back keeps location, date and window as they were (R20).
+// Info screen: Back/Close keeps location, date and window as they were (R20).
 const mainScreen = document.getElementById('main-screen');
 const infoScreen = document.getElementById('info-screen');
+let mainScroll = 0;
 document.getElementById('info-open').addEventListener('click', () => {
+  mainScroll = window.scrollY;
   mainScreen.hidden = true;
   infoScreen.hidden = false;
-  document.getElementById('info-title').focus();
+  window.scrollTo(0, 0);
+  document.getElementById('info-title').focus({ preventScroll: true });
 });
 document.getElementById('info-close').addEventListener('click', () => {
   infoScreen.hidden = true;
   mainScreen.hidden = false;
-  document.getElementById('info-open').focus();
+  // Focus returns to ⓘ without jumping, so the User is back where they were on Main.
+  document.getElementById('info-open').focus({ preventScroll: true });
+  window.scrollTo(0, mainScroll);
 });
-document.getElementById('info-title').tabIndex = -1;
 
 // ---------- Start ----------
 
