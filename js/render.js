@@ -1,6 +1,7 @@
 // Draws Main from the recommendation state only (R11). No rules or weather maths here.
 
 import { shown } from './recommend.js';
+import { STATE_TEXT as T } from './content.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -70,6 +71,8 @@ function drawCharacter(files, label) {
   const el = $('character');
   el.innerHTML = files.map((f) => `<img src="assets/character/${f}.svg" alt="">`).join('');
   el.setAttribute('aria-label', label);
+  // The greyed loading outline has no label and is hidden from screen readers (R31).
+  el.toggleAttribute('aria-hidden', !label);
 }
 
 function drawWeather(w) {
@@ -125,13 +128,52 @@ function focusedKey() {
 
 // ---------- Main ----------
 
+/** Buttons in the status panel. app.js handles them by their data-action. */
+const action = (name, text, primary = false) =>
+  `<button type="button" class="${primary ? 'button primary' : 'button'}" data-action="${name}">${text}</button>`;
+
+/** The message and actions for every status other than "ok", as HTML for the status panel. */
+function statusPanel(state) {
+  switch (state.status) {
+    case 'loading':
+      // Placeholder bars stand in for the recommendation and weather while loading (R21).
+      return `<div class="placeholder-bars" aria-hidden="true"><span></span><span></span></div>
+        <p class="status-text">${T.loading}</p>`;
+    case 'error':
+      return `<img class="status-icon" src="assets/icons/lucide/circle-alert.svg" alt="">
+        <p class="status-title">${T.errorTitle}</p>
+        <p class="status-text">${T.errorReasons[state.reason] ?? T.errorReasons.server}</p>
+        <div class="status-actions">${action('retry', T.retry, true)}</div>`;
+    case 'windowEnded':
+      return state.window === 'day'
+        ? `<p class="status-title">${T.dayEnded}</p>
+          <div class="status-actions">${action('see-evening', T.seeEvening, true)}${action('see-tomorrow', T.seeTomorrow)}</div>`
+        : `<p class="status-title">${T.eveningEnded}</p>
+          <div class="status-actions">${action('see-tomorrow', T.seeTomorrow, true)}</div>`;
+    case 'empty':
+      return `<p class="status-title">${T.firstVisitTitle}</p>
+        <p class="status-text">${T.firstVisitBody}</p>
+        <div class="status-actions">${action('locate', T.useLocation, true)}${action('type-place', T.typePlace)}</div>`;
+    default:
+      return '';
+  }
+}
+
+/** Plain-text version of the status message for the live region (R31). */
+export function statusMessage(state) {
+  const panel = document.createElement('div');
+  panel.innerHTML = statusPanel(state);
+  return [...panel.querySelectorAll('.status-title, .status-text')].map((p) => p.textContent).join(' ');
+}
+
 /**
  * Draw Main.
- * @param state     buildState() result, or a { status: 'loading' | 'error' | 'empty', message } placeholder
- * @param controls  { days, date, window } for the date strip and toggle
+ * @param state     buildState() result, or { status: 'loading' | 'error' | 'empty', location, reason }
+ * @param controls  { days, date, window } for the date strip and toggle; days is empty without a forecast
  */
 export function renderMain(state, controls) {
   const focus = focusedKey();
+  const { status } = state;
   $('place').textContent = state.location?.name ?? 'WearCast';
 
   // Context line (R10): date, Now/Forecast tag. Units and source are static in the page.
@@ -145,20 +187,29 @@ export function renderMain(state, controls) {
     tag.hidden = true;
   }
 
-  const ok = state.status === 'ok';
+  const ok = status === 'ok';
   $('weather').hidden = !ok;
   $('reminders-title').parentElement.hidden = !ok;
+  $('recommendation').hidden = !ok;
+  $('status-panel').hidden = ok;
+  $('status-panel').innerHTML = statusPanel(state);
+  $('status-panel').dataset.status = status;
 
+  // The character: the outfit when ok, a greyed outline while loading (R21), waving on first visit (R25),
+  // and no outfit for an ended window (R9) or an error.
+  const card = $('character').parentElement;
+  card.hidden = status === 'error' || status === 'windowEnded';
+  card.classList.toggle('is-loading', status === 'loading');
   if (ok) {
     drawCharacter(characterLayers(state.category, state.outfitVariant, state.addOns), state.text.characterAlt);
     $('recommendation').textContent = state.text.recommendation;
     drawWeather(state.weather);
     drawReminders(state.reminders);
     drawReminderCount(state.reminders);
-  } else {
-    // Loading, error, ended-window and first-visit screens are built in CP10.
-    drawCharacter([], '');
-    $('recommendation').textContent = state.message ?? '';
+  } else if (status === 'loading') {
+    drawCharacter(['body', 'head'], '');
+  } else if (status === 'empty') {
+    drawCharacter(['body-wave', 'outfit-wave', 'head-wave'], T.waveAlt);
   }
 
   renderControls(controls);
@@ -166,6 +217,9 @@ export function renderMain(state, controls) {
 }
 
 function renderControls({ days = [], date, window }) {
+  // Without a forecast there is nothing to pick yet: only the location controls show.
+  $('day-strip').hidden = days.length === 0;
+  document.querySelector('.window-toggle').hidden = days.length === 0;
   const strip = $('day-strip');
   strip.innerHTML = days.map((d) => {
     const label = dayLabels(d.date);

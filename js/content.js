@@ -70,3 +70,25 @@ export const LAYER_TIMES = {
   evening: { today: 'this evening', future: 'the evening' },
   late: { today: 'later tonight', future: 'later that night' },
 };
+
+/** Loading, error, ended-window and first-visit copy (R9, R21, R23, R25). */
+export const STATE_TEXT = {
+  loading: 'Getting the weather…',
+  errorTitle: 'Couldn’t load the weather',
+  errorReasons: {
+    timeout: 'Open-Meteo didn’t respond within 10 seconds.',
+    offline: 'Couldn’t reach Open-Meteo. Check your connection.',
+    server: 'Open-Meteo sent back an error.',
+    missing: 'The forecast is missing temperatures for this time.',
+  },
+  retry: 'Retry',
+  dayEnded: 'Today’s daytime has ended. See Evening or pick another day.',
+  eveningEnded: 'Tonight’s evening has ended. Pick another day.',
+  seeEvening: 'See Evening',
+  seeTomorrow: 'See tomorrow',
+  firstVisitTitle: 'What should I wear today?',
+  firstVisitBody: 'Pick a place to get an outfit for the weather.',
+  useLocation: 'Use my location',
+  typePlace: 'Type a city or ZIP',
+  waveAlt: 'Character waving hello, wearing a tee, light chinos and sneakers.',
+};

@@ -5,7 +5,9 @@ Run from the repo root:  python3 tools/make-fixtures.py
 Writes fixtures/<name>.json. fixtures/austin-sample.json is a real recorded response and isn't touched.
 
 Each fixture repeats one 24-hour pattern for 7 days; js/fixtures.js moves the dates so day one is today.
-Open a fixture with ?fixture=<name>.
+Open a fixture with ?fixture=<name>. Optional extras in the "fixture" block, used by js/app.js in test mode only:
+  "now": {"hour": 21}    fixes the local hour (e.g. to show today's ended Day window)
+  "fail": "timeout"      makes loading fail with that reason (timeout | offline | server)
 """
 import json
 from pathlib import Path
@@ -40,7 +42,13 @@ def shifted(series, by):
     return [v + by for v in series]
 
 
-def write(name, description, p, location=AUSTIN):
+def flat(feels, rain, uv, wind, gust, code=2):
+    """The same values every hour, so a window's max equals the value (threshold edges, R15)."""
+    return {"feels": [feels] * 24, "rain": [rain] * 24, "uv": [uv] * 24, "wind": [wind] * 24,
+            "gust": [gust] * 24, "code": [code] * 24}
+
+
+def write(name, description, p, location=AUSTIN, extra=None):
     from datetime import date, timedelta
     start = date.fromisoformat(START)
     hourly = {"time": [], "apparent_temperature": [], "precipitation_probability": [], "uv_index": [],
@@ -55,7 +63,7 @@ def write(name, description, p, location=AUSTIN):
             hourly["wind_gusts_10m"].append(p["gust"][h])
             hourly["weather_code"].append(p["code"][h])
     data = {
-        "fixture": {"description": description, "location": location},
+        "fixture": {"description": description, "location": location, **(extra or {})},
         "latitude": 30.269146, "longitude": -97.75338, "utc_offset_seconds": -18000,
         "timezone": "America/Chicago", "timezone_abbreviation": "GMT-5", "elevation": 157.0,
         "current_units": UNITS_CURRENT,
@@ -88,9 +96,33 @@ FIXTURES = {
                      "Mild outfit and 'Nothing extra to bring' (R17).",
                      pattern(feels=[62] * 8 + [62, 63, 64, 65, 66, 67, 68, 68, 67, 66, 65, 64, 63] + [62] * 3,
                              rain=[10] * 24, uv=[min(1, u) for u in BASE["uv"]], wind=[5] * 24, code=[3] * 24)),
+    # The spec's R33 example: a calm day, then thunderstorms and wind in the evening.
+    "storm-evening": ("Storm in the evening: Day dry and warm; Evening feels 66-79°F, rain 80%, thunderstorms, "
+                      "wind 21 mph, gusts 38.",
+                      pattern(rain=[10] * 17 + [80] * 7, code=BASE["code"][:17] + [95] * 7,
+                              wind=BASE["wind"][:17] + [21] * 7, gust=[round(w * 1.6) for w in BASE["wind"][:17]] + [38] * 7)),
+    # Missing values (R23): UV is null in every hour → "UV —", no sunscreen, hat or sunglasses.
+    "missing-uv": ("Usability weather with UV removed (null) in every hour.", pattern(uv=[None] * 24)),
+    # Threshold edges (R15): just below every reminder, at every reminder, and gusts alone.
+    "edges-below": ("Just below every threshold: rain 39%, UV 2.9, feels 79°F, wind 19 mph, gusts 29. No reminders.",
+                    flat(79, 39, 2.9, 19, 29)),
+    "edges-at": ("At every threshold: rain 40%, UV 3, feels 80°F, wind 20 mph, gusts 30. All four reminders.",
+                 flat(80, 40, 3, 20, 30)),
+    "edges-gust": ("Gusts alone at the threshold: wind 19 mph, gusts 30. Bike wind reminder only.",
+                   flat(72, 10, 1, 19, 30)),
+}
+
+# Fixtures with extras (fixed clock, forced failure).
+EXTRAS = {
+    "ended": ("Usability weather with the clock fixed at 9pm, so today's Day window has ended (R9).",
+              pattern(), {"now": {"hour": 21}}),
+    "error-timeout": ("Loading fails as if Open-Meteo timed out (R23).", pattern(), {"fail": "timeout"}),
 }
 
 if __name__ == "__main__":
     for name, (description, p) in FIXTURES.items():
         write(name, description, p)
+    for name, (description, p, extra) in EXTRAS.items():
+        write(name, description, p, extra=extra)
+        FIXTURES[name] = None
     print("wrote", ", ".join(FIXTURES))

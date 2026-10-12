@@ -1,11 +1,11 @@
 // WearCast entry point: wires inputs → state → render.
 
-import { fetchForecast, parseForecast, reverseLookup } from './api.js';
+import { fetchForecast, parseForecast, reverseLookup, ApiError } from './api.js';
 import { loadLocation, saveLocation } from './storage.js';
 import { fixtureName, loadFixture, showTestBanner } from './fixtures.js';
 import { buildState, defaultWindow, nowIn, weatherInputs, windowHours } from './recommend.js';
 import { createVariations, variationKey } from './variation.js';
-import { renderMain, announce } from './render.js';
+import { renderMain, announce, statusMessage } from './render.js';
 import { setUpSearch, openSearch } from './search.js';
 
 const fixture = fixtureName();
@@ -19,7 +19,17 @@ const app = {
   forecast: null, // parseForecast() result
   date: null, // "YYYY-MM-DD"
   window: 'day', // "day" | "evening"
+  loading: false,
+  error: null, // ApiError reason while the forecast can't be shown
+  fixedHour: null, // test forecasts only: a fixed local hour, e.g. to show an ended window
 };
+let lastStatus = null; // announce a status only when it changes
+
+/** The location's current date and hour; a test forecast may fix the hour (spec R33). */
+function clock() {
+  const now = nowIn(app.forecast.timezone);
+  return app.fixedHour == null ? now : { ...now, hour: app.fixedHour };
+}
 
 /**
  * One entry per forecast day for the date strip: the date, plus the weather icon and feels-like
@@ -33,44 +43,69 @@ function daySummaries(now) {
 }
 
 function update() {
-  if (!app.forecast) {
-    renderMain({ status: 'empty', location: app.location, message: 'Type a city or ZIP to get started.' },
-      { days: [], window: app.window });
-    return;
+  let state;
+  let controls = { days: [], window: app.window };
+  if (app.loading) {
+    state = { status: 'loading', location: app.location };
+  } else if (app.error) {
+    state = { status: 'error', reason: app.error, location: app.location };
+  } else if (!app.forecast) {
+    state = { status: 'empty' }; // first visit (R25)
+  } else {
+    const now = clock();
+    controls = { days: daySummaries(now), date: app.date, window: app.window };
+    state = buildState({
+      location: app.location,
+      forecast: app.forecast,
+      date: app.date,
+      window: app.window,
+      now,
+      picks: variations.picksFor(variationKey(app.date, app.window)),
+    });
   }
-  const now = nowIn(app.forecast.timezone);
-  const controls = { days: daySummaries(now), date: app.date, window: app.window };
-  const state = buildState({
-    location: app.location,
-    forecast: app.forecast,
-    date: app.date,
-    window: app.window,
-    now,
-    picks: variations.picksFor(variationKey(app.date, app.window)),
-  });
   renderMain(state, controls);
+  if (state.status !== lastStatus && state.status !== 'ok' && state.status !== 'empty') {
+    announce(statusMessage(state)); // loading, error and ended window are announced (R31)
+  }
+  lastStatus = state.status;
 }
 
-/** Load the forecast for a location: one request per location (spec: Data flow). */
-async function showLocation(location) {
+/** The raw forecast: a test forecast when ?fixture= is set, otherwise one Open-Meteo request. */
+async function getForecast(location) {
+  if (!fixtureData) return fetchForecast(location.lat, location.lon);
+  const raw = await fixtureData;
+  app.fixedHour = raw.fixture.now?.hour ?? null;
+  if (raw.fixture.fail) throw new ApiError(raw.fixture.fail, 'Test forecast set to fail');
+  return raw;
+}
+
+/**
+ * Load the forecast for a location: one request per location (spec: Data flow).
+ * A Retry keeps the date, window and variation picks; a new location starts fresh.
+ */
+async function showLocation(location, { retry = false } = {}) {
   showNotice('');
   app.location = location;
-  renderMain({ status: 'loading', location, message: 'Getting the weather…' }, { window: app.window });
-  announce('Getting the weather…');
+  app.loading = true;
+  app.error = null;
+  if (!retry) app.forecast = null;
+  update();
   try {
-    const raw = fixtureData ? await fixtureData : await fetchForecast(location.lat, location.lon);
-    app.forecast = parseForecast(raw);
+    app.forecast = parseForecast(await getForecast(location));
   } catch (error) {
-    // The full error screen with Retry is built in CP10.
+    app.loading = false;
     app.forecast = null;
-    renderMain({ status: 'error', location, message: 'Couldn’t load the weather. ' + error.message }, {});
-    announce('Couldn’t load the weather.');
+    app.error = error instanceof ApiError ? error.reason : 'server';
+    update();
     return;
   }
-  const now = nowIn(app.forecast.timezone);
-  app.date = app.forecast.days.includes(now.date) ? now.date : app.forecast.days[0];
-  app.window = defaultWindow(now.hour); // R8
-  variations.clear(); // a new location starts with fresh picks
+  app.loading = false;
+  const now = clock();
+  if (!retry || !app.forecast.days.includes(app.date)) {
+    app.date = app.forecast.days.includes(now.date) ? now.date : app.forecast.days[0];
+    app.window = defaultWindow(now.hour); // R8
+  }
+  if (!retry) variations.clear(); // a new location starts with fresh picks
   update();
   announce(`Showing ${location.name}.`);
 }
@@ -167,6 +202,31 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
   input.value = '';
 });
 document.getElementById('locate-button').addEventListener('click', useMyLocation);
+
+// Buttons in the status panel: Retry (R23), See Evening / See tomorrow (R9), first-visit choices (R25).
+document.getElementById('status-panel').addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  switch (button.dataset.action) {
+    case 'retry':
+      showLocation(app.location, { retry: true });
+      break;
+    case 'see-evening':
+      app.window = 'evening';
+      update();
+      break;
+    case 'see-tomorrow':
+      app.date = app.forecast.days[app.forecast.days.indexOf(app.date) + 1] ?? app.date;
+      update();
+      break;
+    case 'locate':
+      useMyLocation();
+      break;
+    case 'type-place':
+      document.getElementById('place-input').focus();
+      break;
+  }
+});
 setUpSearch({ choose: choosePlace, locate: useMyLocation });
 
 // Info screen: Back keeps location, date and window as they were (R20).
@@ -191,7 +251,7 @@ function start() {
     showTestBanner();
     fixtureData
       .then((raw) => showLocation(raw.fixture.location))
-      .catch((error) => renderMain({ status: 'error', message: error.message }, {}));
+      .catch(() => { app.error = 'server'; update(); }); // a missing fixture file
     return;
   }
   const saved = loadLocation();

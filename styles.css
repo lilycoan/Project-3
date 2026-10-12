@@ -149,6 +149,11 @@ input {
   color: var(--text-muted);
 }
 
+/* No date yet (first visit, loading, error): drop the empty slot so "°F · mph" lines up */
+#date-label:empty {
+  display: none;
+}
+
 .tag {
   padding: 0 8px;
   border: 1px solid var(--accent);
@@ -396,6 +401,88 @@ input {
   border-color: var(--accent);
   color: #ffffff;
   font-weight: 700;
+}
+
+/* ---------- States: loading, error, ended window, first visit (R9, R21, R23, R25) ---------- */
+
+.status-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+/* Error and ended window replace the character, so the panel becomes the card */
+.status-panel[data-status="error"],
+.status-panel[data-status="windowEnded"] {
+  padding: 32px var(--gap);
+  background: var(--surface);
+  border: 1px solid var(--soft-line);
+  border-radius: var(--radius);
+}
+
+.status-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.status-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  max-width: 30ch;
+}
+
+.status-text {
+  color: var(--text-muted);
+  max-width: 36ch;
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.button {
+  min-height: var(--target);
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+/* Loading: the character as a greyed outline and placeholder bars (R21) */
+.character-card.is-loading .character {
+  filter: grayscale(1);
+  opacity: 0.35;
+}
+
+.placeholder-bars {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 320px);
+}
+
+.placeholder-bars span {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--soft-line);
+}
+
+.placeholder-bars span:last-child {
+  width: 60%;
+  justify-self: center;
 }
 
 /* ---------- Location notice (R5, R22) ---------- */
@@ -655,6 +742,17 @@ input {
   /* Fits the character in a 1440×900 window without scrolling (R12) */
   .character {
     height: clamp(360px, calc(100dvh - 400px), 640px);
+  }
+
+  /* States sit in the right column on laptop, beside the character (or alone when there is none) */
+  .status-panel {
+    grid-area: recommendation;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .status-actions {
+    justify-content: flex-start;
   }
 
   .recommendation {
