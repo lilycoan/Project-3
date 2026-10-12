@@ -37,6 +37,26 @@
       <img src="assets/icons/lucide/info.svg" alt="">
     </button>
 
+    <!-- Location, date and window controls: a bottom bar in thumb reach on phone (R30),
+         spread into the header and week strip on laptop. They come before the content in the
+         markup, so keyboard and screen-reader order is "choose, then read" and matches the laptop
+         screen; on phone, CSS order draws them at the bottom. -->
+    <div class="controls">
+      <form class="search" id="search-form" role="search">
+        <label for="place-input" class="visually-hidden">City or ZIP</label>
+        <input id="place-input" type="search" placeholder="City or ZIP" autocomplete="off" enterkeyhint="search">
+        <button type="button" class="icon-button locate-button" id="locate-button">
+          <img src="assets/icons/lucide/locate.svg" alt="">
+          <span class="locate-label">Use my location</span>
+        </button>
+      </form>
+      <div class="day-strip" id="day-strip" role="group" aria-label="Date"></div>
+      <div class="window-toggle" role="group" aria-label="Time of day">
+        <button type="button" data-window="day" aria-pressed="true">Day</button>
+        <button type="button" data-window="evening" aria-pressed="false">Evening</button>
+      </div>
+    </div>
+
     <main class="content" id="content">
       <!-- Location messages: denied (R22), outside the US (R5), search problems -->
       <p class="notice" id="notice" hidden></p>
@@ -71,23 +91,6 @@
       </section>
     </main>
 
-    <!-- Location, date and window controls: a bottom bar in thumb reach on phone (R30),
-         spread into the header and week strip on laptop. -->
-    <div class="controls">
-      <form class="search" id="search-form" role="search">
-        <label for="place-input" class="visually-hidden">City or ZIP</label>
-        <input id="place-input" type="search" placeholder="City or ZIP" autocomplete="off" enterkeyhint="search">
-        <button type="button" class="icon-button locate-button" id="locate-button">
-          <img src="assets/icons/lucide/locate.svg" alt="">
-          <span class="locate-label">Use my location</span>
-        </button>
-      </form>
-      <div class="day-strip" id="day-strip" role="group" aria-label="Date"></div>
-      <div class="window-toggle" role="group" aria-label="Time of day">
-        <button type="button" data-window="day" aria-pressed="true">Day</button>
-        <button type="button" data-window="evening" aria-pressed="false">Evening</button>
-      </div>
-    </div>
   </div>
 
   <!-- Place search results (R3): a bottom sheet on phone, a panel under the header field on laptop. -->

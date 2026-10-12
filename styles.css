@@ -305,8 +305,10 @@ input {
   color: var(--text-muted);
 }
 
-/* Bottom controls: stay in thumb reach while the content scrolls (R30) */
+/* Bottom controls: stay in thumb reach while the content scrolls (R30).
+   They come first in the markup (focus order), so order: 1 draws them after the content. */
 .controls {
+  order: 1;
   position: sticky;
   bottom: 0;
   display: grid;

@@ -185,6 +185,16 @@ Record material plan changes and why they were made.
   - the laptop Info links were 36 px tall
 
   All are fixed, and every run now has 0 violations and no controls under 44 px. The weather condition is now written beside "Feels like", because pale icons (clouds) fall below 3:1 and shouldn't carry it alone (1.4.11). The placeholder text now uses the muted colour (7.0:1). All 12 colour pairs pass. A keyboard Tab walk reaches every control, and every stop shows a focus ring.
+- **2026-10-11 (CP12): controls come before the content in the markup** (approved by the Developer). The laptop focus order used to jump from the reminders back up to the header controls. The order is now Open-Meteo, ⓘ, City or ZIP, Use my location, the 7 dates, Day/Evening, then the reminders, on both layouts. On phone, CSS `order` still draws the controls at the bottom.
+- **CP12, still for the Developer to verify (R31, R32):** a VoiceOver walkthrough on a real phone:
+  1. Find "Use my location" or type a city, and pick a place from the sheet.
+  2. Swipe to a date. It should read "Mon 12 October, selected" or similar.
+  3. Switch Day/Evening.
+  4. Swipe to the character. It should read the outfit, for example "Character wearing a tee, …".
+  5. Tick a reminder. It should read "checked".
+  6. Open Info and go Back.
+
+  Also confirm the deployed look matches the approved soft-neutral direction.
 
 ## Saving transcripts
 
