@@ -151,7 +151,13 @@ function showNotice(text) {
 /** A place picked from search or found from the device: save it (R6) and load its weather. */
 function choosePlace(place) {
   const location = { name: place.name, lat: place.lat, lon: place.lon };
-  if (!fixture) saveLocation(location); // test mode never overwrites the User's saved location
+  saveLocation(location);
+  if (fixture) {
+    // Choosing a place leaves test mode: reload without ?fixture= so live weather loads for it.
+    // Otherwise the new name would show over the saved test weather (R33).
+    window.location.assign(window.location.pathname);
+    return;
+  }
   showLocation(location);
 }
 

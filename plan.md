@@ -103,7 +103,7 @@ Approach, build checkpoints and usability test plan approved by the Developer on
 - [ ] Verify that eligible outfit and reminder variations are selected independently rather than as fixed pairs
 - [ ] Verify that returning to a previously selected date shows the same variations
 - [ ] Test the deployed app, independently of the local version, on a real phone and a laptop, including both screens, accessibility, and one-handed controls
-- [ ] Prepare the usability test below
+- [ ] Prepare the usability test below *(session guide drafted by the Agent on 2026-10-11; Developer to review)*
 - [ ] Test with three peers and record each session
 - [ ] Add the chosen improvement to this checklist, and update `spec.md` if the intended result changes
 - [ ] Implement, verify, and redeploy at least one meaningful revision
@@ -170,6 +170,39 @@ Before testing, record the purpose, a few realistic tasks, non-leading prompts, 
 
 Follow-ups after the tasks: "What, if anything, was confusing?" "What would make you use this, or not?"
 
+**Recording:** written notes only (Developer decision, 2026-10-11). No audio, video or screen recordings, and no names.
+
+**Session guide** (prepared 2026-10-11, *Developer to review*):
+
+- **Test link (all 4 tasks):** https://lilycoan.github.io/Project-3/?fixture=usability. Tasks 1–2 use the saved test forecast. In task 3, choosing a place by search or "Use my location" leaves test mode by itself and loads live weather, so the tester never needs a second link.
+- **Before each session:**
+  - Wait at least 10 minutes after any deploy (GitHub Pages caches files for 10 minutes).
+  - Do a quick run-through yourself on the test link.
+  - Send the link to the tester (text or AirDrop) and have them open it in their usual browser.
+  - Have the P-table below ready.
+  - Don't show or explain the app first.
+- **Intro script (read aloud):** "Thanks for helping. I'm testing the app, not you, so there are no wrong answers. Please think out loud as you go: what you're looking at, what you expect, anything that surprises you. Hold your phone the way you normally would, one-handed if that's natural. I'll mostly stay quiet. I'm taking written notes without your name, and you can stop at any time."
+- **Help rule:** only step in if the tester is stuck for over a minute. Then use a neutral nudge ("What would you try next?"), and mark the task "with help".
+- **What success looks like** (outfits vary by tester; the day, window and advice don't):
+
+  | Task | Tester should end on | Correct answer contains |
+  |---|---|---|
+  | 1. Tomorrow morning | Tomorrow · **Day** | a Warm outfit **plus a light layer for the morning**, sunscreen (UV 7), water (feels-like 83°) |
+  | 2. Friday evening | Friday · **Evening** | a Warm outfit, **a light layer for later that night**, **an umbrella** (70% rain around 10pm) |
+  | 3. Where you are | their own place, test banner gone | via "Use my location" (allowing the prompt) or a typed city or ZIP |
+  | 4. Trust and privacy | the Info screen | weather from Open-Meteo; only the last place and the chosen look are saved on the phone |
+
+- **Watch for (observations, not interpretations):**
+  - **Date strip:** do they find tomorrow and Friday in the bottom strip?
+  - **Day/Evening:** do they notice and use the toggle, or stay on the default?
+  - **Advice:** do they mention the layer and the umbrella, or only the main outfit?
+  - **Reminders:** do they read or tick them?
+  - **Look switch:** do they notice or use the switch in the character card corner?
+  - **Info:** do they find the ⓘ button?
+  - **One-handed:** do they reach the controls with one thumb, or switch hands?
+  - **Banner:** do they notice the "Test data" banner?
+- **After the tasks:** ask the two follow-ups, then thank them.
+
 **Note format** (one table per session, labeled P1, P2, P3, with no names):
 
 | Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
@@ -177,7 +210,35 @@ Follow-ups after the tasks: "What, if anything, was confusing?" "What would make
 
 **Sessions:**
 
-*(P1–P3 notes are added here after testing.)*
+*P1* (date: ____)
+
+| Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
+|---|---|---|---|---|
+| 1. Tomorrow morning | | | | |
+| 2. Friday evening | | | | |
+| 3. Where you are | | | | |
+| 4. Trust and privacy | | | | |
+| Follow-ups | | — | | |
+
+*P2* (date: ____)
+
+| Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
+|---|---|---|---|---|
+| 1. Tomorrow morning | | | | |
+| 2. Friday evening | | | | |
+| 3. Where you are | | | | |
+| 4. Trust and privacy | | | | |
+| Follow-ups | | — | | |
+
+*P3* (date: ____)
+
+| Task | What the tester did or said (observation) | Success? (yes / with help / no) | Barriers or questions | Possible change (interpretation) |
+|---|---|---|---|---|
+| 1. Tomorrow morning | | | | |
+| 2. Friday evening | | | | |
+| 3. Where you are | | | | |
+| 4. Trust and privacy | | | | |
+| Follow-ups | | — | | |
 
 **Findings and chosen improvement:**
 
@@ -243,6 +304,7 @@ Record material plan changes and why they were made.
   - **Checks:** 24 browser checks, 0 axe violations, and 45 unit tests passing.
 - **2026-10-11 (CP12b): local server moved to port 8137.** Another local app answers on `127.0.0.1:8000`, so `localhost:8000` sometimes reached it instead of WearCast, and test runs failed for that reason alone.
 - **Known deploy risk: cached modules.** GitHub Pages lets browsers cache files for about 10 minutes. A visitor who had the old version open within 10 minutes of a deploy can get new and old modules mixed, which shows a blank page until they reload. *Mitigation:* wait about 10 minutes after a deploy before usability sessions, and reload once if a page is blank.
+- **2026-10-11 (usability prep): choosing a place leaves test mode** (approved by the Developer). A dry run showed that searching "Denver" on the test link showed "Denver, CO" over the Austin test weather. Choosing a place in test mode now saves it and reloads the normal URL, so task 3 gets live weather without a second link.
 
 ## Saving transcripts
 
