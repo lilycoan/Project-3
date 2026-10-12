@@ -130,10 +130,25 @@ function placeLabel(city, state) {
   return code ? `${city}, ${code}` : city;
 }
 
-export function searchUrl(query) {
+const isZip = (text) => /^\d{5}$/.test(text);
+// For comparing names: no accents, case or periods, and St/Ft/Mt read as Saint/Fort/Mount ("St. Louis" = "St Louis").
+const ABBREVIATIONS = { st: 'saint', ft: 'fort', mt: 'mount' };
+const normalize = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  .replace(/\./g, ' ').replace(/\b(st|ft|mt)\b/g, (abbr) => ABBREVIATIONS[abbr]).replace(/\s+/g, ' ').trim();
+
+/**
+ * Split what the User typed into the place to search for and an optional state:
+ * "Austin, TX" → { place: "Austin", state: "TX" }. The geocoder only understands the place part.
+ */
+export function parseQuery(text) {
+  const [place, state = ''] = text.split(',').map((part) => part.trim());
+  return { place, state };
+}
+
+export function searchUrl(place) {
   const params = new URLSearchParams({
-    name: query.trim(),
-    count: 10,
+    name: place,
+    count: 20, // extra results, as the starts-with filter below drops loose matches
     countryCode: 'US',
     language: 'en',
     format: 'json',
@@ -141,17 +156,52 @@ export function searchUrl(query) {
   return `${GEOCODING_URL}?${params}`;
 }
 
-/** US matches as [{ name: "Austin, TX", lat, lon }]. An empty list means "No US places found". */
+/**
+ * US towns and cities as [{ name: "Austin, TX", lat, lon, city, state }]. Airports, parks and other
+ * features are dropped (populated places have GeoNames feature codes starting "PPL"). When two
+ * places would share a label, the county is added: "Austin, AR (Lonoke County)".
+ */
 export function parsePlaces(raw) {
   const results = Array.isArray(raw?.results) ? raw.results : [];
-  return results
-    .filter((r) => r.country_code === 'US')
-    .map((r) => ({ name: placeLabel(r.name, r.admin1), lat: r.latitude, lon: r.longitude }));
+  const places = results
+    .filter((r) => r.country_code === 'US' && (r.feature_code ?? 'PPL').startsWith('PPL'))
+    .map((r) => ({
+      name: placeLabel(r.name, r.admin1),
+      lat: r.latitude,
+      lon: r.longitude,
+      city: r.name,
+      state: STATE_CODES[r.admin1] ?? r.admin1 ?? '',
+      county: r.admin2 ?? '',
+    }));
+  const counts = new Map();
+  for (const p of places) counts.set(p.name, (counts.get(p.name) ?? 0) + 1);
+  return places.map(({ county, ...p }) => {
+    if (counts.get(p.name) > 1 && county) {
+      p.name += ` (${/county|parish|borough/i.test(county) ? county : `${county} County`})`;
+    }
+    return p;
+  });
 }
 
-export async function searchPlaces(query) {
-  if (!query.trim()) return [];
-  return parsePlaces(await getJson(searchUrl(query)));
+/**
+ * Keep places whose name starts with what was typed, dropping the geocoder's loose matches
+ * ("Austin" also returns "Ardmore, TN"). ZIP searches are kept as they are. A typed state,
+ * as a code or full name, narrows the list further. An empty result means "No US places found".
+ */
+export function filterPlaces({ place, state }, places) {
+  let kept = isZip(place) ? places : places.filter((p) => normalize(p.city).startsWith(normalize(place)));
+  if (state) {
+    const wanted = normalize(state);
+    kept = kept.filter((p) => normalize(p.state) === wanted
+      || normalize(Object.keys(STATE_CODES).find((name) => STATE_CODES[name] === p.state) ?? '') === wanted);
+  }
+  return kept.slice(0, 10);
+}
+
+export async function searchPlaces(text) {
+  const query = parseQuery(text);
+  if (!query.place) return [];
+  return filterPlaces(query, parsePlaces(await getJson(searchUrl(query.place))));
 }
 
 // ---------- Reverse lookup (Nominatim) ----------

@@ -398,6 +398,104 @@ input {
   font-weight: 700;
 }
 
+/* ---------- Location notice (R5, R22) ---------- */
+
+.notice {
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+
+/* ---------- Search sheet (R3) ---------- */
+
+.sheet {
+  /* Phone: a bottom sheet over a dimmed page */
+  position: fixed;
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 80dvh;
+  margin: 0;
+  padding: 8px var(--gap) max(var(--gap), env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  border: 0;
+  border-radius: 20px 20px 0 0;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 -4px 24px rgb(43 39 34 / 0.18);
+}
+
+.sheet::backdrop {
+  background: rgb(43 39 34 / 0.35);
+}
+
+.sheet-handle {
+  width: 44px;
+  height: 5px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.sheet-search {
+  display: flex;
+  gap: 8px;
+}
+
+.sheet-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--target);
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.sheet-message {
+  margin: 12px 4px 4px;
+  color: var(--text-muted);
+}
+
+.sheet-results {
+  padding: 0;
+  list-style: none;
+}
+
+.sheet-results button,
+.sheet-locate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 4px;
+  border: 0;
+  border-bottom: 1px solid var(--soft-line);
+  background: none;
+  text-align: left;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sheet-results button:hover,
+.sheet-locate:hover {
+  background: var(--surface);
+}
+
+.sheet-locate {
+  border-bottom: 0;
+  margin-top: 4px;
+}
+
+.sheet-locate img {
+  width: 22px;
+  height: 22px;
+}
+
 /* ---------- Info ---------- */
 
 .info-screen {
@@ -591,6 +689,27 @@ input {
   /* Two columns of reminders only when each column has room */
   .reminder-list {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* Laptop: the sheet becomes a panel under the header search field (spec: States, laptop) */
+@media (min-width: 768px) {
+  .sheet {
+    inset: var(--sheet-top, 72px) auto auto var(--sheet-left, 32px);
+    width: min(420px, calc(100vw - 64px));
+    max-height: min(70dvh, 560px);
+    padding: var(--gap);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgb(43 39 34 / 0.18);
+  }
+
+  .sheet::backdrop {
+    background: rgb(43 39 34 / 0.12);
+  }
+
+  .sheet-handle {
+    display: none;
   }
 }
 

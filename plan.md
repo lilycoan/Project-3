@@ -37,6 +37,7 @@ js/recommend.js       pure functions: window hours, weather inputs, condition ra
 js/content.js         outfit and reminder wording (3 each)
 js/variation.js       in-memory random picks and check marks keyed by date|window
 js/render.js          draws character layers, icons, text, reminders, states from the state
+js/search.js          place search sheet (native <dialog>): results, keyboard, Use my location
 js/storage.js         save/restore the most recent location only
 js/fixtures.js        loads test forecasts when the URL has ?fixture=<name>
 fixtures/*.json       saved test forecasts (thresholds, storm, missing UV, error, ended window)
@@ -171,6 +172,9 @@ Record material plan changes and why they were made.
 - **2026-10-09 (after CP6): CP12b added for the character style choice** requested by the Developer (spec R34, R6 change). It is scheduled after CP12 and before usability testing, so the core checkpoints finish first.
 - **2026-10-11 (CP7): focus is kept across re-renders.** The date strip and reminder list are rebuilt on each render, which dropped keyboard focus after every date press. That bug was introduced in CP6. `renderMain` now restores focus to the same date or reminder. Reminders also show a count ("2 of 4 ready") beside the heading.
 - **2026-10-11 (CP8): one set of markup for both layouts.** At 768 px and up, `.main-screen` becomes a CSS grid, and the controls wrapper (a plain `<div>` with no role) uses `display: contents`, so the search, week strip and toggle can sit in the header and strip rows. Landmarks (`main`, `section`, `form`) are never set to `display: contents`, to avoid Safari dropping their roles. The ⓘ button, the visible app name and the recommendation text moved in the markup so each can be placed in both layouts. "Use my location" shows as text from 1024 px. Between 768 and 1023 px it's icon-only, with the same accessible name.
+- **2026-10-11 (CP9): search results are filtered** (approved by the Developer). Only towns and cities whose name starts with what was typed are kept (ZIP searches are exempt). Periods and St/Ft/Mt ↔ Saint/Fort/Mount are ignored when comparing. A typed ", ST" or state name narrows the list. Airports and other features are dropped. When two places would share a label, the county is added.
+- **2026-10-11 (CP9): device coordinates are rounded to 2 decimals (about 1 km)** before they go to Nominatim and Open-Meteo or are saved. That's enough for city weather and shares less precise location data. The Info privacy text (CP11) should say so. *Developer to review.*
+- **2026-10-11 (CP9): a fresh position on every tap.** The first version allowed a 10-minute-old position, which kept the old place when the simulated location changed. That would also break the R5 check with DevTools Sensors.
 
 ## Saving transcripts
 

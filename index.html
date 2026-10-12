@@ -38,6 +38,9 @@
     </button>
 
     <main class="content" id="content">
+      <!-- Location messages: denied (R22), outside the US (R5), search problems -->
+      <p class="notice" id="notice" hidden></p>
+
       <!-- The character is the focus of Main (R12). Its text alternative describes the outfit drawn (R31). -->
       <div class="character-card">
         <div class="character" id="character" role="img" aria-label=""></div>
@@ -83,6 +86,24 @@
       </div>
     </div>
   </div>
+
+  <!-- Place search results (R3): a bottom sheet on phone, a panel under the header field on laptop. -->
+  <dialog class="sheet" id="search-sheet" aria-labelledby="sheet-title">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <h2 class="visually-hidden" id="sheet-title">Choose a place</h2>
+    <form class="sheet-search" id="sheet-form" role="search">
+      <label for="sheet-input" class="visually-hidden">City or ZIP</label>
+      <input id="sheet-input" type="search" placeholder="City or ZIP" autocomplete="off" enterkeyhint="search">
+      <button type="button" class="icon-button" id="sheet-close" aria-label="Close">
+        <img src="assets/icons/lucide/x.svg" alt="">
+      </button>
+    </form>
+    <p class="sheet-message" id="sheet-message" role="status"></p>
+    <ul class="sheet-results" id="sheet-results"></ul>
+    <button type="button" class="sheet-locate" id="sheet-locate">
+      <img src="assets/icons/lucide/locate.svg" alt=""> Use my location
+    </button>
+  </dialog>
 
   <section id="info-screen" class="screen info-screen" aria-labelledby="info-title" hidden>
     <button type="button" class="back-button" id="info-close">

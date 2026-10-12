@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parseForecast, parsePlaces, parseReverse, forecastUrl, ApiError } from '../js/api.js';
+import { parseForecast, parsePlaces, parseReverse, forecastUrl, ApiError, parseQuery, filterPlaces } from '../js/api.js';
 import { saveLocation, loadLocation } from '../js/storage.js';
 import { fixtureName, rebaseFixture, shiftDate, todayIn } from '../js/fixtures.js';
 
@@ -71,11 +71,42 @@ test('parsePlaces labels US matches as "City, ST" and drops other countries', ()
       { name: 'Paris', admin1: 'Île-de-France', country_code: 'FR', latitude: 48.85, longitude: 2.35 },
     ],
   });
-  assert.deepEqual(places, [
-    { name: 'Austin, TX', lat: 30.27, lon: -97.74 },
-    { name: 'Austin, MN', lat: 43.67, lon: -92.97 },
+  assert.deepEqual(places.map((p) => [p.name, p.lat, p.lon, p.state]), [
+    ['Austin, TX', 30.27, -97.74, 'TX'],
+    ['Austin, MN', 43.67, -92.97, 'MN'],
   ]);
   assert.deepEqual(parsePlaces({ generationtime_ms: 0.4 }), []); // no results → "No US places found"
+});
+
+test('search keeps names starting with the query, and a typed state narrows it', () => {
+  const places = [
+    { name: 'Austin, TX', city: 'Austin', state: 'TX' },
+    { name: 'Austin, MN', city: 'Austin', state: 'MN' },
+    { name: 'Ardmore, TN', city: 'Ardmore', state: 'TN' },
+    { name: 'Cazadero, CA', city: 'Cazadero', state: 'CA' },
+  ];
+  const names = (text) => filterPlaces(parseQuery(text), places).map((p) => p.name);
+  assert.deepEqual(names('Austin'), ['Austin, TX', 'Austin, MN']);
+  assert.deepEqual(names('aus'), ['Austin, TX', 'Austin, MN']);
+  assert.deepEqual(names('Austin, TX'), ['Austin, TX']);
+  assert.deepEqual(names('austin, minnesota'), ['Austin, MN']);
+  assert.deepEqual(names('Paris'), []); // → "No US places found"
+  assert.deepEqual(filterPlaces(parseQuery('78705'), places.slice(0, 1)).map((p) => p.name), ['Austin, TX']); // ZIP: no name filter
+  assert.deepEqual(parseQuery(' Austin , TX '), { place: 'Austin', state: 'TX' });
+});
+
+test('places: features dropped, duplicate labels get a county, abbreviations match', () => {
+  const places = parsePlaces({
+    results: [
+      { name: 'Austin', admin1: 'Arkansas', admin2: 'Lonoke', country_code: 'US', feature_code: 'PPL', latitude: 1, longitude: 1 },
+      { name: 'Austin', admin1: 'Arkansas', admin2: 'Conway', country_code: 'US', feature_code: 'PPL', latitude: 2, longitude: 2 },
+      { name: 'Austin', admin1: 'Texas', admin2: 'Travis', country_code: 'US', feature_code: 'PPLA', latitude: 3, longitude: 3 },
+      { name: 'Austin Airport', admin1: 'Texas', country_code: 'US', feature_code: 'AIRP', latitude: 4, longitude: 4 },
+    ],
+  });
+  assert.deepEqual(places.map((p) => p.name), ['Austin, AR (Lonoke County)', 'Austin, AR (Conway County)', 'Austin, TX']);
+  const stl = [{ name: 'St Louis, MO', city: 'St Louis', state: 'MO' }, { name: 'Saint Louis, MI', city: 'Saint Louis', state: 'MI' }];
+  assert.deepEqual(filterPlaces(parseQuery('St. Louis'), stl).map((p) => p.name), ['St Louis, MO', 'Saint Louis, MI']);
 });
 
 test('parseReverse names US places and flags non-US ones', () => {

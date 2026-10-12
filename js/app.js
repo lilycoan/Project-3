@@ -1,11 +1,12 @@
 // WearCast entry point: wires inputs → state → render.
 
-import { fetchForecast, parseForecast, searchPlaces, reverseLookup } from './api.js';
+import { fetchForecast, parseForecast, reverseLookup } from './api.js';
 import { loadLocation, saveLocation } from './storage.js';
 import { fixtureName, loadFixture, showTestBanner } from './fixtures.js';
 import { buildState, defaultWindow, nowIn, weatherInputs, windowHours } from './recommend.js';
 import { createVariations, variationKey } from './variation.js';
 import { renderMain, announce } from './render.js';
+import { setUpSearch, openSearch } from './search.js';
 
 const fixture = fixtureName();
 // In test mode the saved forecast is loaded once and stands in for Open-Meteo (R33).
@@ -52,6 +53,7 @@ function update() {
 
 /** Load the forecast for a location: one request per location (spec: Data flow). */
 async function showLocation(location) {
+  showNotice('');
   app.location = location;
   renderMain({ status: 'loading', location, message: 'Getting the weather…' }, { window: app.window });
   announce('Getting the weather…');
@@ -97,21 +99,75 @@ document.getElementById('reminder-list').addEventListener('change', (event) => {
   update();
 });
 
-// TEMPORARY (CP6–CP8): picks the first match so live weather can be checked on a phone.
-// Replaced by the search sheet with all matches in CP9.
-document.getElementById('search-form').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const input = document.getElementById('place-input');
-  const places = await searchPlaces(input.value).catch(() => []);
-  if (places.length === 0) {
-    announce('No US places found.');
+// ---------- Choosing a location (R3–R6, R22, R24) ----------
+
+const notice = document.getElementById('notice');
+
+/** Show or clear a location message above the character, and announce it (R31). */
+function showNotice(text) {
+  notice.textContent = text;
+  notice.hidden = !text;
+  if (text) announce(text);
+}
+
+/** A place picked from search or found from the device: save it (R6) and load its weather. */
+function choosePlace(place) {
+  const location = { name: place.name, lat: place.lat, lon: place.lon };
+  if (!fixture) saveLocation(location); // test mode never overwrites the User's saved location
+  showLocation(location);
+}
+
+/** The browser's position as a promise. Errors keep the GeolocationPositionError code. */
+function devicePosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('unavailable'));
+      return;
+    }
+    // maximumAge 0: always a fresh position, so a tap after moving (or a changed DevTools sensor) is honoured.
+    navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10_000, maximumAge: 0 });
+  });
+}
+
+const LOCATION_OFF = 'Location is off for this site. Type a city or ZIP instead.';
+
+/** "Use my location": only ever runs on a tap (R4). */
+async function useMyLocation() {
+  let position;
+  try {
+    position = await devicePosition();
+  } catch {
+    // Denied, unavailable or timed out: keep the current location and point to typing (R22).
+    showNotice(LOCATION_OFF);
+    document.getElementById('place-input').focus();
     return;
   }
+  // Two decimals (about 1 km) is plenty for city weather and sends less precise data to services (R26).
+  const lat = Math.round(position.coords.latitude * 100) / 100;
+  const lon = Math.round(position.coords.longitude * 100) / 100;
+
+  let name = 'Your location';
+  try {
+    const place = await reverseLookup(lat, lon);
+    if (!place.isUS) {
+      showNotice('WearCast covers US locations. Type a US city or ZIP.'); // R5: keep the previous location
+      return;
+    }
+    name = place.name ?? name;
+  } catch {
+    // Nominatim failed: the weather still loads, labeled "Your location" (R24).
+  }
+  choosePlace({ name, lat, lon });
+}
+
+document.getElementById('search-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const input = document.getElementById('place-input');
+  openSearch(input.value);
   input.value = '';
-  input.blur();
-  saveLocation(places[0]);
-  showLocation(places[0]);
 });
+document.getElementById('locate-button').addEventListener('click', useMyLocation);
+setUpSearch({ choose: choosePlace, locate: useMyLocation });
 
 // Info screen: Back keeps location, date and window as they were (R20).
 const mainScreen = document.getElementById('main-screen');
@@ -142,15 +198,5 @@ function start() {
   if (saved) showLocation(saved);
   else update(); // first visit: nothing is requested until the User chooses (R25)
 }
-
-// TEMPORARY (CP2–CP8): DevTools helpers, removed when the location flows are built in CP9.
-globalThis.wearcast = {
-  searchPlaces,
-  reverseLookup,
-  choose(place) {
-    saveLocation(place);
-    return showLocation(place);
-  },
-};
 
 start();
