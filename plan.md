@@ -88,6 +88,7 @@ Approach, build checkpoints and usability test plan approved by the Developer on
 - [ ] **CP10: States.** Loading, service error with Retry, missing values as "—", window ended, and first visit with no requests, per `sketch-states-phone.jpg`, announced through a live region. *Check:* R9, R21, R23, R25 using fixtures, throttling and network blocking.
 - [ ] **CP11: Info screen.** Phone (← Back) and laptop (✕ Close, "On this page") per `sketch-info-phone-laptop.jpg`: creator, data sources, method table, privacy, credits, safety note. *Check:* R20, R26, R27; Back/Close keeps location, date and window.
 - [ ] **CP12: Accessibility and polish pass.** Contrast, focus styles, keyboard order, labels, 44 px targets, 320 px reflow, reduced motion. *Check:* R30–R32 with axe DevTools, keyboard-only and VoiceOver walkthroughs.
+- [ ] **CP12b: Character style choice (R34).** Second head and waving head (Open Peeps "Medium"), 2 new outfits for the Short wavy style, a two-preview style control, style saved with the location, and alt text and wording per style. Update Info privacy and credits. *Check:* R34, R6 (DevTools shows only location and style), R11/R14 text matching for both styles, keyboard and VoiceOver.
 - [ ] Use the approved screen drawings to guide layout and interaction work
 - [ ] Keep one recommendation state driving every visual and written output
 - [ ] Test and fix each checkpoint against the specification before starting the next
@@ -167,6 +168,8 @@ Record material plan changes and why they were made.
   - First visit uses `body-wave.svg`, `outfit-wave.svg` and `head-wave.svg` (Open Peeps "Cute" face, a wink).
 - **2026-10-09 (CP6): test forecasts come from a generator.** `tools/make-fixtures.py` writes `usability`, `hot-all-reminders`, `mild-layer`, `cold-sunny` and `calm-nothing`. The threshold, missing-value and error fixtures are added at CP10.
 - **2026-10-09 (CP6): temporary search.** Until the search sheet is built at CP9, pressing Enter in City or ZIP picks the first US match, so live weather can be checked on a phone. The locate button does nothing until CP9.
+- **2026-10-09 (after CP6): CP12b added for the character style choice** requested by the Developer (spec R34, R6 change). It is scheduled after CP12 and before usability testing, so the core checkpoints finish first.
+- **2026-10-11 (CP7): focus is kept across re-renders.** The date strip and reminder list are rebuilt on each render, which dropped keyboard focus after every date press. That bug was introduced in CP6. `renderMain` now restores focus to the same date or reminder. Reminders also show a count ("2 of 4 ready") beside the heading.
 
 ## Saving transcripts
 

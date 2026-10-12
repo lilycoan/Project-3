@@ -90,14 +90,35 @@ function drawWeather(w) {
 function drawReminders(reminders) {
   const list = $('reminder-list');
   if (reminders.length === 0) {
-    list.innerHTML = '<li class="reminder none">Nothing extra to bring.</li>'; // R17
+    list.innerHTML = '<li class="reminder-none">Nothing extra to bring.</li>'; // R17
     return;
   }
+  // Real checkboxes (R16): the whole row is the label, so it is one large tap target.
   list.innerHTML = reminders.map((r) => `
-    <li class="reminder">
-      <img src="${REMINDER_ICONS[r.type]}" alt="">
-      <span><strong>${r.label}:</strong> ${r.text}</span>
+    <li>
+      <label class="reminder">
+        <input type="checkbox" data-reminder="${r.type}"${r.checked ? ' checked' : ''}>
+        <img src="${REMINDER_ICONS[r.type]}" alt="">
+        <span class="reminder-text"><strong>${r.label}:</strong> ${r.text}</span>
+      </label>
     </li>`).join('');
+}
+
+function drawReminderCount(reminders) {
+  const count = $('reminder-count');
+  const ready = reminders.filter((r) => r.checked).length;
+  count.hidden = reminders.length === 0;
+  count.textContent = `${ready} of ${reminders.length} ready`;
+}
+
+// Parts of Main are rebuilt on each render; these attributes identify a control across rebuilds.
+const FOCUS_KEYS = ['data-date', 'data-reminder'];
+
+/** Remember which rebuilt control has focus, so keyboard users stay in place after a render. */
+function focusedKey() {
+  const el = document.activeElement;
+  const attr = FOCUS_KEYS.find((a) => el?.hasAttribute?.(a));
+  return attr ? `[${attr}="${el.getAttribute(attr)}"]` : null;
 }
 
 // ---------- Main ----------
@@ -108,6 +129,7 @@ function drawReminders(reminders) {
  * @param controls  { days, date, window } for the date strip and toggle
  */
 export function renderMain(state, controls) {
+  const focus = focusedKey();
   $('place').textContent = state.location?.name ?? 'WearCast';
 
   // Context line (R10): date, Now/Forecast tag. Units and source are static in the page.
@@ -130,6 +152,7 @@ export function renderMain(state, controls) {
     $('recommendation').textContent = state.text.recommendation;
     drawWeather(state.weather);
     drawReminders(state.reminders);
+    drawReminderCount(state.reminders);
   } else {
     // Loading, error, ended-window and first-visit screens are built in CP10.
     drawCharacter([], '');
@@ -137,6 +160,7 @@ export function renderMain(state, controls) {
   }
 
   renderControls(controls);
+  if (focus) document.querySelector(focus)?.focus();
 }
 
 function renderControls({ days = [], date, window }) {

@@ -77,6 +77,14 @@ for (const button of document.querySelectorAll('.window-toggle button')) {
   });
 }
 
+// Ticks are kept per date|window in memory only, so a reload clears them (R16, R6).
+document.getElementById('reminder-list').addEventListener('change', (event) => {
+  const box = event.target.closest('input[data-reminder]');
+  if (!box) return;
+  variations.setChecked(variationKey(app.date, app.window), box.dataset.reminder, box.checked);
+  update();
+});
+
 // TEMPORARY (CP6–CP8): picks the first match so live weather can be checked on a phone.
 // Replaced by the search sheet with all matches in CP9.
 document.getElementById('search-form').addEventListener('submit', async (event) => {

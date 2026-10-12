@@ -245,6 +245,13 @@ input {
   margin-bottom: 8px;
 }
 
+.reminder-count {
+  margin-left: 6px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
 .reminder-list {
   display: grid;
   gap: 8px;
@@ -252,11 +259,26 @@ input {
   list-style: none;
 }
 
+/* Each reminder row is a checkbox label: one tap target, at least 44 px tall (R16, R30) */
 .reminder {
   display: flex;
   align-items: center;
   gap: 10px;
   min-height: var(--target);
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--soft-line);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.reminder input {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .reminder img {
@@ -265,7 +287,13 @@ input {
   flex: none;
 }
 
-.reminder.none {
+/* Ticked: muted and struck through, so the remaining items stand out */
+.reminder:has(input:checked) .reminder-text {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.reminder-none {
   color: var(--text-muted);
 }
 

@@ -327,6 +327,12 @@ Record features intentionally excluded from this project.
 After implementation or testing, record requirement changes and the evidence that prompted them. Update the screen drawings when a material layout or interaction changes.
 
 - **2026-10-04 (planning): R33 added, test forecast mode** (approved by the Developer). The plan uses saved test forecasts to verify thresholds and states, and to give usability testers identical weather. *Requirement:* with `?fixture=<name>` in the URL, the app loads a saved forecast instead of Open-Meteo, and a visible banner reads **"Test data, not live weather."** Without the parameter, only live data is used (R1), and nothing in the app links to test mode. ✓ `?fixture=storm-evening` shows the banner and the stored values. The normal URL shows no banner and makes live requests.
+- **2026-10-09 (build, after CP6): R34 added and R6 changed, character style choice** (requested by the Developer; approved by the Developer on 2026-10-11).
+  - *R34. Character style.* Users choose between two character styles by tapping one of two small character previews. The previews carry screen-reader labels that describe what they show, and there's no gender label in the interface. Each style has its own head (Short wavy, or Open Peeps "Medium" hair) and its own 3 outfits per category. Both styles share the add-ons and reminders. The written recommendation and alt text describe the chosen style's outfit. ✓ Switching style changes the head and outfit together, and the text matches the drawing in every category. The choice is still there after a reload. Both previews work with the keyboard and with VoiceOver.
+  - *R6 change.* The saved data becomes the most recent location (name, latitude, longitude) **and the character style**. Nothing else is stored. The Info privacy text (R26) says so.
+  - *Out of scope change.* "Character customization" now means customization beyond the two-style choice.
+  - *Assets.* A second head (Open Peeps "Medium", CC0), a second waving head, and 2 new outfits for the Short wavy style to replace the dress (Hot 3) and the skirt (Warm 2). The Medium-hair style keeps the current 12 outfits. The new outfits' wording, and where the style control sits on Main and Info, are decided at that checkpoint and approved by the Developer.
+  - *Why:* the Developer wants Users to see clothing that fits how they dress.
 
 ## Approval
 
