@@ -108,6 +108,45 @@ Approach, build checkpoints and usability test plan approved by the Developer on
 - [ ] Add the chosen improvement to this checklist, and update `spec.md` if the intended result changes
 - [ ] Implement, verify, and redeploy at least one meaningful revision
 
+**Requirement sweep, 2026-10-11** (Agent; automated checks run against the local copy and the deployed site at commit `3e3286a`). ✅ = shown by an automated check · 👤 = still needs the Developer's own check (real phone, VoiceOver or judgement).
+
+| Req | Status | Evidence |
+|---|---|---|
+| R1 Live Open-Meteo | ✅ | Only `api.open-meteo.com` contacted for weather. Screen values equal the API's hourly values for 4 live days. |
+| R2 7-day range | ✅ | 7 days starting "today" in Austin, Honolulu and New York. |
+| R3 Manual entry | ✅ | "Austin" lists TX/MN/IN (no loose matches). "78705" gives Austin, TX. Nonsense gives "No US places found" and the field stays usable. |
+| R4 Device location | ✅ 👤 | Named "Austin, TX". A second tap makes no new Nominatim request (simulated). 👤 Real permission prompt on a phone. |
+| R5 Non-US location | ✅ | Toronto shows the US-only message and keeps the place. |
+| R6 Saved data | ✅ | Two keys only (`wearcast.location`, `wearcast.style`), no cookies. The place is restored on reload. |
+| R7 Date selection | ✅ 👤 | All 7 days update every output. Laptop strip shows icon and range per window. 👤 VoiceOver reads "selected". |
+| R8 Day/Evening | ✅ | Default by local hour (unit tests, and a 9pm test clock opens Evening). Today uses remaining hours (unit test at 2pm). |
+| R9 Ended window | ✅ | Message, no outfit, See Evening and See tomorrow both work. |
+| R10 Context | ✅ | Place, date, Now/Forecast, °F · mph and source visible at every width. |
+| R11 One state | ✅ | Umbrella ⇔ reminder and hat/sunglasses ⇔ sunscreen for every value, both looks, all variants (unit + browser). |
+| R12 Character focus | ✅ | Fully visible and the largest element at 390×844 and 1440×900. |
+| R13 Weather details | ✅ | Equal to the API max/min over the window, rounded down (revision). |
+| R14 Written recommendation | ✅ | Text and alt text match the drawn outfit for 2 looks × 12 outfits. |
+| R15 Reminder rules | ✅ | Below/at every threshold and gust-only fixtures. "Headwind" never appears. |
+| R16 Checkable reminders | ✅ 👤 | Space and Tab, kept per date and window, cleared on reload. 👤 VoiceOver reads "checked". |
+| R17 No reminders | ✅ | "Nothing extra to bring." |
+| R18 Variations | ✅ | 20 real reloads: 3/3 outfits, 3/3 wordings for each reminder, 19 distinct combinations. |
+| R19 Same on return | ✅ | Day 3 → day 4 → day 3 identical. |
+| R20 Info screen | ✅ | All sections and the safety note on both layouts. 21 links resolve. Back/Close keeps the view and scroll. |
+| R21 Loading | ✅ | Greyed outline, bars, "Getting the weather…", announced. |
+| R22 Location denied | ✅ 👤 | Message, focus on the field, place kept (simulated). 👤 Real denial on a phone. |
+| R23 Errors and missing data | ✅ | Error at 10.0 s, blocked network, Retry recovers. "UV —" with no sunscreen, hat or sunglasses. |
+| R24 Nominatim failure | ✅ | "Your location" and the weather loads. |
+| R25 First visit | ✅ | Waving character, look choice, both buttons. No requests. |
+| R26 Privacy | ✅ | No cookies. Only Open-Meteo (and Nominatim on a tap) contacted. Info text matches the re-checked policies. |
+| R27 Credits | ✅ | Every asset credited with its license. |
+| R28 Deployment | ✅ 👤 | HTTPS on GitHub Pages serving the latest commit. Repo and history search finds no secrets. 👤 Open on a real phone and laptop. |
+| R29 Layouts | ✅ | Switches at 768 px. Nothing lost from 1440 to 320 px. Date, window and ticks survive resizing. |
+| R30 One-handed | ✅ 👤 | Controls in the bottom 20% at 390×844. Every target ≥ 44 px. 👤 Thumb reach on a real phone. |
+| R31 Accessibility | ✅ 👤 | axe 0 violations on 8 states × 2 sizes (local and deployed). 12/12 contrast pairs. Keyboard focus rings and order. Live region. 320 px reflow. 👤 VoiceOver walkthrough. |
+| R32 Visual direction | 👤 | Developer judgement. |
+| R33 Test mode | ✅ | Banner and no Open-Meteo request with `?fixture=`. Normal URL shows no banner and uses live data. |
+| R34 Character look | ✅ 👤 | 24 checks on local and deployed (chooser, switch, saved, swapped outfits, keyboard, axe). 👤 VoiceOver names the two looks. |
+
 ### Deliver
 
 - [ ] Confirm all brief deliverables, sources, privacy information, and asset credits
