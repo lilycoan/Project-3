@@ -322,6 +322,11 @@ input {
   gap: 8px;
 }
 
+::placeholder {
+  color: var(--text-muted); /* 6.6:1 on the field, above the browser default's 4.5:1 */
+  opacity: 1;
+}
+
 .search input {
   flex: 1;
   min-width: 0;
@@ -954,8 +959,10 @@ th {
   }
 
   .info-nav a {
-    display: block;
-    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    min-height: var(--target);
+    padding: 4px 12px;
     color: var(--text);
     text-decoration: none;
   }

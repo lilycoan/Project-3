@@ -72,20 +72,20 @@ function drawCharacter(files, label) {
   el.innerHTML = files.map((f) => `<img src="assets/character/${f}.svg" alt="">`).join('');
   el.setAttribute('aria-label', label);
   // The greyed loading outline has no label and is hidden from screen readers (R31).
-  el.toggleAttribute('aria-hidden', !label);
+  if (label) el.removeAttribute('aria-hidden');
+  else el.setAttribute('aria-hidden', 'true');
 }
 
 function drawWeather(w) {
   const icon = $('condition-icon');
   const condition = CONDITION_ICONS[w.condition];
   icon.hidden = !condition;
-  if (condition) {
-    icon.src = `assets/icons/meteocons/${condition[0]}.svg`;
-    icon.alt = condition[1];
-  }
-  const feels = $('feels');
-  feels.textContent = `${show(w.feelsHigh, (v) => `${v}°`)} / ${show(w.feelsLow, (v) => `${v}°`)}`;
-  feels.setAttribute('aria-label', `high ${shown(w.feelsHigh)}°, low ${shown(w.feelsLow)}°`);
+  if (condition) icon.src = `assets/icons/meteocons/${condition[0]}.svg`;
+  // The condition is also written out, so the pale icons never carry it alone (WCAG 1.4.11).
+  $('condition').textContent = condition ? `${condition[1]} · ` : '';
+  $('feels').innerHTML = `<span class="visually-hidden">High </span>${show(w.feelsHigh, (v) => `${v}°`)}`
+    + '<span aria-hidden="true"> / </span>'
+    + `<span class="visually-hidden">, low </span>${show(w.feelsLow, (v) => `${v}°`)}`;
   $('rain').textContent = show(w.rainMax, (v) => `${v}%`);
   $('uv').textContent = show(w.uvMax, (v) => `${v} ${uvLevel(Number(v))}`);
   $('wind').textContent = show(w.windMax, (v) => `${v} mph`) +
@@ -227,10 +227,13 @@ function renderControls({ days = [], date, window }) {
     // The icon and range show on the laptop week strip only; the phone strip shows the day alone.
     const icon = condition ? `<img class="day-icon" src="assets/icons/meteocons/${condition[0]}.svg" alt="">` : '';
     const range = `${show(d.feelsHigh, (v) => `${v}°`)}/${show(d.feelsLow, (v) => `${v}°`)}`;
-    const spoken = d.feelsHigh == null ? '' : `, ${condition ? condition[1] + ', ' : ''}feels like ${shown(d.feelsHigh)} to ${shown(d.feelsLow)}`;
-    return `<button type="button" data-date="${d.date}" aria-pressed="${d.date === date}" aria-label="${label.long}${spoken}">
-      <span class="day-name"><span>${label.weekday}</span> <span class="day-num">${label.day}</span></span>
-      ${icon}<span class="day-range">${range}</span></button>`;
+    const month = label.long.split(' ')[1]; // "October"
+    // No aria-label: the visible "Mon 12" starts the spoken name, so voice control matches it (WCAG 2.5.3).
+    // The month, and on laptop the condition, are added for screen readers only.
+    const said = condition ? `<span class="visually-hidden">, ${condition[1]}, feels like</span> ` : '';
+    return `<button type="button" data-date="${d.date}" aria-pressed="${d.date === date}">
+      <span class="day-name"><span>${label.weekday}</span> <span class="day-num">${label.day}</span><span class="visually-hidden"> ${month}</span></span>
+      ${icon}<span class="day-range">${said}${range}</span></button>`;
   }).join('');
   for (const button of document.querySelectorAll('.window-toggle button')) {
     button.setAttribute('aria-pressed', String(button.dataset.window === window));

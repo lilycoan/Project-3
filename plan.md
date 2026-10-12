@@ -178,6 +178,13 @@ Record material plan changes and why they were made.
 - **2026-10-11 (CP10): states share one status panel.** Loading, error, ended window and first visit each put their message and buttons in `#status-panel`, rendered from the state. The panel is announced through the live region when the status changes. Retry keeps the date, window and variation picks (spec: *How variations are chosen and kept*). A new location starts fresh.
 - **2026-10-11 (CP10): test forecast extras.** A fixture's `fixture` block can fix the local hour (`"now": {"hour": 21}`, used by `ended`) or force a failure (`"fail": "timeout"`, used by `error-timeout`). Both work only in `?fixture=` mode. New fixtures: `storm-evening`, `missing-uv`, `edges-below`, `edges-at`, `edges-gust`, `ended`, `error-timeout`.
 - **2026-10-11 (CP11): Info content checked against sources.** The Open-Meteo terms (CC BY 4.0, 90-day logs, not shared), GitHub Pages IP logging and the Nominatim attribution requirement were re-read online. The Nominatim retention claim was wrong and is corrected (see the `spec.md` revision). All 21 Info links resolve. The phone shows ← Back and the laptop ✕ Close (one button, layout-specific text). Back/Close restores the place, date, window and scroll position, and focus returns to ⓘ.
+- **2026-10-11 (CP12): accessibility audit.** axe-core 4.14 (WCAG 2.2 A/AA) was run on 8 states at 390 and 1440 px. Before fixes:
+  - the date buttons' spoken names didn't contain their visible text (2.5.3)
+  - the loading outline had an invalid `aria-hidden` value
+  - the feels-like paragraph had an `aria-label`, which isn't allowed on a paragraph
+  - the laptop Info links were 36 px tall
+
+  All are fixed, and every run now has 0 violations and no controls under 44 px. The weather condition is now written beside "Feels like", because pale icons (clouds) fall below 3:1 and shouldn't carry it alone (1.4.11). The placeholder text now uses the muted colour (7.0:1). All 12 colour pairs pass. A keyboard Tab walk reaches every control, and every stop shows a focus ring.
 
 ## Saving transcripts
 
