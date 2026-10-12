@@ -243,8 +243,8 @@ Define at least three outfit variations for each recommendation category and at 
 | Reminder | Wording 1 | Wording 2 | Wording 3 |
 |---|---|---|---|
 | **Umbrella** | "Grab an umbrella: {rain}% chance of rain around {time}." | "Rain's likely ({rain}%) around {time}. Pack an umbrella." | "Don't get caught out: {rain}% rain chance around {time}." |
-| **Sunscreen** | "UV hits {uv} today. Put on sunscreen before you head out." | "Strong sun (UV {uv}). Sunscreen, hat, sunglasses." | "UV {uv}: SPF 15+ before you go, and reapply if you're out a while." |
-| **Hydration** | "Feels like {feelsHigh}°. Carry a water bottle and refill it." | "It's a sweaty one ({feelsHigh}°). Keep water on you." | "Hot out there: {feelsHigh}°. Drink up throughout the day." |
+| **Sunscreen** | "UV hits {uv}. Put on sunscreen before you head out." | "Strong sun (UV {uv}). Sunscreen, hat, sunglasses." | "UV {uv}: SPF 15+ before you go, and reapply if you're out a while." |
+| **Hydration** | "Feels like {feelsHigh}°. Carry a water bottle and refill it." | "It's a sweaty one ({feelsHigh}°). Keep water on you." | "Hot out there: {feelsHigh}°. Keep drinking while you're out." |
 | **Bike wind** | "Gusty ride: wind up to {wind} mph, gusts {gust}." | "Strong wind for biking ({wind} mph). Give yourself extra time." | "Windy on two wheels: gusts to {gust} mph. Ride with care." |
 
 `{time}` is the hour of `rainMax`. `{uv}`, `{wind}`, `{gust}` and `{feelsHigh}` are the window's values, rounded.
@@ -333,6 +333,7 @@ After implementation or testing, record requirement changes and the evidence tha
   - *Out of scope change.* "Character customization" now means customization beyond the two-style choice.
   - *Assets.* A second head (Open Peeps "Medium", CC0), a second waving head, and 2 new outfits for the Short wavy style to replace the dress (Hot 3) and the skirt (Warm 2). The Medium-hair style keeps the current 12 outfits. The new outfits' wording, and where the style control sits on Main and Info, are decided at that checkpoint and approved by the Developer.
   - *Why:* the Developer wants Users to see clothing that fits how they dress.
+- **2026-10-11 (build, CP7): two reminder wordings made neutral** (approved by the Developer). Sunscreen wording 1 dropped "today", and hydration wording 3 dropped "throughout the day", because both also show for forecast dates and the Evening window. Sunscreen 1 now reads "UV hits {uv}. Put on sunscreen before you head out." Hydration 3 now reads "Hot out there: {feelsHigh}°. Keep drinking while you're out."
 
 ## Approval
 

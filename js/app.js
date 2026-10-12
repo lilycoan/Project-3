@@ -3,7 +3,7 @@
 import { fetchForecast, parseForecast, searchPlaces, reverseLookup } from './api.js';
 import { loadLocation, saveLocation } from './storage.js';
 import { fixtureName, loadFixture, showTestBanner } from './fixtures.js';
-import { buildState, defaultWindow, nowIn } from './recommend.js';
+import { buildState, defaultWindow, nowIn, weatherInputs, windowHours } from './recommend.js';
 import { createVariations, variationKey } from './variation.js';
 import { renderMain, announce } from './render.js';
 
@@ -20,13 +20,25 @@ const app = {
   window: 'day', // "day" | "evening"
 };
 
+/**
+ * One entry per forecast day for the date strip: the date, plus the weather icon and feels-like
+ * range for the selected window, from the same rules as Main (shown on the laptop week strip, R7).
+ */
+function daySummaries(now) {
+  return app.forecast.days.map((date) => {
+    const w = weatherInputs(windowHours(app.forecast.hours, date, app.window, now));
+    return { date, condition: w.condition, feelsHigh: w.feelsHigh, feelsLow: w.feelsLow };
+  });
+}
+
 function update() {
-  const controls = { days: app.forecast?.days ?? [], date: app.date, window: app.window };
   if (!app.forecast) {
-    renderMain({ status: 'empty', location: app.location, message: 'Type a city or ZIP to get started.' }, controls);
+    renderMain({ status: 'empty', location: app.location, message: 'Type a city or ZIP to get started.' },
+      { days: [], window: app.window });
     return;
   }
   const now = nowIn(app.forecast.timezone);
+  const controls = { days: daySummaries(now), date: app.date, window: app.window };
   const state = buildState({
     location: app.location,
     forecast: app.forecast,

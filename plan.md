@@ -170,6 +170,7 @@ Record material plan changes and why they were made.
 - **2026-10-09 (CP6): temporary search.** Until the search sheet is built at CP9, pressing Enter in City or ZIP picks the first US match, so live weather can be checked on a phone. The locate button does nothing until CP9.
 - **2026-10-09 (after CP6): CP12b added for the character style choice** requested by the Developer (spec R34, R6 change). It is scheduled after CP12 and before usability testing, so the core checkpoints finish first.
 - **2026-10-11 (CP7): focus is kept across re-renders.** The date strip and reminder list are rebuilt on each render, which dropped keyboard focus after every date press. That bug was introduced in CP6. `renderMain` now restores focus to the same date or reminder. Reminders also show a count ("2 of 4 ready") beside the heading.
+- **2026-10-11 (CP8): one set of markup for both layouts.** At 768 px and up, `.main-screen` becomes a CSS grid, and the controls wrapper (a plain `<div>` with no role) uses `display: contents`, so the search, week strip and toggle can sit in the header and strip rows. Landmarks (`main`, `section`, `form`) are never set to `display: contents`, to avoid Safari dropping their roles. The ⓘ button, the visible app name and the recommendation text moved in the markup so each can be placed in both layouts. "Use my location" shows as text from 1024 px. Between 768 and 1023 px it's icon-only, with the same accessible name.
 
 ## Saving transcripts
 

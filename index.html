@@ -17,29 +17,32 @@
 
   <h1 class="visually-hidden">WearCast</h1>
 
+  <!-- One set of markup for both layouts: a flex column on phone, a grid at 768 px and up (R29). -->
   <div id="main-screen" class="screen main-screen">
+    <!-- App name in the laptop header bar. The h1 above carries the name for screen readers. -->
+    <p class="brand" aria-hidden="true">WearCast</p>
+
     <!-- Always-visible context (R10) -->
-    <header class="context">
-      <div class="context-top">
-        <p class="place" id="place">WearCast</p>
-        <button type="button" class="icon-button" id="info-open" aria-label="About WearCast">
-          <img src="assets/icons/lucide/info.svg" alt="">
-        </button>
-      </div>
+    <div class="context">
+      <p class="place" id="place">WearCast</p>
       <p class="context-line">
         <span id="date-label"></span>
         <span class="tag" id="time-tag" hidden></span>
         <span class="units">°F · mph</span>
       </p>
       <p class="source">Weather: <a href="https://open-meteo.com/">Open-Meteo</a></p>
-    </header>
+    </div>
+
+    <button type="button" class="icon-button info-open" id="info-open" aria-label="About WearCast">
+      <img src="assets/icons/lucide/info.svg" alt="">
+    </button>
 
     <main class="content" id="content">
       <!-- The character is the focus of Main (R12). Its text alternative describes the outfit drawn (R31). -->
-      <section class="character-card" aria-label="Outfit">
+      <div class="character-card">
         <div class="character" id="character" role="img" aria-label=""></div>
-        <p class="recommendation" id="recommendation"></p>
-      </section>
+      </div>
+      <p class="recommendation" id="recommendation"></p>
 
       <section class="weather" id="weather" aria-label="Weather for this time window">
         <div class="feels">
@@ -62,13 +65,15 @@
       </section>
     </main>
 
-    <!-- Location, date and window controls sit at the bottom on phone, in thumb reach (R30). -->
-    <section class="controls" aria-label="Location, date and time of day">
+    <!-- Location, date and window controls: a bottom bar in thumb reach on phone (R30),
+         spread into the header and week strip on laptop. -->
+    <div class="controls">
       <form class="search" id="search-form" role="search">
         <label for="place-input" class="visually-hidden">City or ZIP</label>
         <input id="place-input" type="search" placeholder="City or ZIP" autocomplete="off" enterkeyhint="search">
-        <button type="button" class="icon-button" id="locate-button" aria-label="Use my location">
+        <button type="button" class="icon-button locate-button" id="locate-button">
           <img src="assets/icons/lucide/locate.svg" alt="">
+          <span class="locate-label">Use my location</span>
         </button>
       </form>
       <div class="day-strip" id="day-strip" role="group" aria-label="Date"></div>
@@ -76,7 +81,7 @@
         <button type="button" data-window="day" aria-pressed="true">Day</button>
         <button type="button" data-window="evening" aria-pressed="false">Evening</button>
       </div>
-    </section>
+    </div>
   </div>
 
   <section id="info-screen" class="screen info-screen" aria-labelledby="info-title" hidden>

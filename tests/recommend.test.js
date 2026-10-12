@@ -163,7 +163,7 @@ test('reminder wording fills in rounded values and the rain hour', () => {
   const w = calm({ rainMax: 62, rainHour: 21, uvMax: 6.6, feelsHigh: 83.4, windMax: 21.5, gustMax: 33 });
   assert.equal(reminderText('umbrella', 0, w), 'Grab an umbrella: 62% chance of rain around 9pm.');
   assert.equal(reminderText('sunscreen', 1, w), 'Strong sun (UV 7). Sunscreen, hat, sunglasses.');
-  assert.equal(reminderText('hydration', 2, w), 'Hot out there: 83°. Drink up throughout the day.');
+  assert.equal(reminderText('hydration', 2, w), 'Hot out there: 83°. Keep drinking while you’re out.');
   assert.equal(reminderText('bikeWind', 0, w), 'Gusty ride: wind up to 22 mph, gusts 33.');
   assert.ok(!/headwind/i.test(Object.values({ a: reminderText('bikeWind', 1, w), b: reminderText('bikeWind', 2, w) }).join(' ')));
 });

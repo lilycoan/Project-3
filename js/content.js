@@ -38,14 +38,14 @@ export const REMINDER_WORDINGS = {
     'Don’t get caught out: {rain}% rain chance around {time}.',
   ],
   sunscreen: [
-    'UV hits {uv} today. Put on sunscreen before you head out.',
+    'UV hits {uv}. Put on sunscreen before you head out.',
     'Strong sun (UV {uv}). Sunscreen, hat, sunglasses.',
     'UV {uv}: SPF 15+ before you go, and reapply if you’re out a while.',
   ],
   hydration: [
     'Feels like {feelsHigh}°. Carry a water bottle and refill it.',
     'It’s a sweaty one ({feelsHigh}°). Keep water on you.',
-    'Hot out there: {feelsHigh}°. Drink up throughout the day.',
+    'Hot out there: {feelsHigh}°. Keep drinking while you’re out.',
   ],
   bikeWind: [
     'Gusty ride: wind up to {wind} mph, gusts {gust}.',

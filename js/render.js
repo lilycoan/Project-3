@@ -166,10 +166,15 @@ export function renderMain(state, controls) {
 function renderControls({ days = [], date, window }) {
   const strip = $('day-strip');
   strip.innerHTML = days.map((d) => {
-    const label = dayLabels(d);
-    const selected = d === date;
-    return `<button type="button" data-date="${d}" aria-pressed="${selected}" aria-label="${label.long}">
-      <span>${label.weekday}</span><span class="day-num">${label.day}</span></button>`;
+    const label = dayLabels(d.date);
+    const condition = CONDITION_ICONS[d.condition];
+    // The icon and range show on the laptop week strip only; the phone strip shows the day alone.
+    const icon = condition ? `<img class="day-icon" src="assets/icons/meteocons/${condition[0]}.svg" alt="">` : '';
+    const range = `${show(d.feelsHigh, (v) => `${round(v)}°`)}/${show(d.feelsLow, (v) => `${round(v)}°`)}`;
+    const spoken = d.feelsHigh == null ? '' : `, ${condition ? condition[1] + ', ' : ''}feels like ${round(d.feelsHigh)} to ${round(d.feelsLow)}`;
+    return `<button type="button" data-date="${d.date}" aria-pressed="${d.date === date}" aria-label="${label.long}${spoken}">
+      <span class="day-name"><span>${label.weekday}</span> <span class="day-num">${label.day}</span></span>
+      ${icon}<span class="day-range">${range}</span></button>`;
   }).join('');
   for (const button of document.querySelectorAll('.window-toggle button')) {
     button.setAttribute('aria-pressed', String(button.dataset.window === window));
