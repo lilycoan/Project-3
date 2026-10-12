@@ -127,17 +127,24 @@ export function triggeredReminders(w) {
 
 // ---------- Text ----------
 
-const round = (value) => (value == null ? '—' : String(Math.round(value)));
+/**
+ * A value as shown to Users: a whole number rounded down, or "—" when missing.
+ * Rounding down keeps every shown value on the same side of a threshold as its rule
+ * (29.8 mph gusts shows 29, not 30, and the 30 mph rule doesn't trigger).
+ */
+export function shown(value) {
+  return value == null ? '—' : String(Math.floor(value));
+}
 
 /** Fill a reminder wording's placeholders from the window's values. */
 export function reminderText(type, variant, w) {
   const values = {
-    rain: round(w.rainMax),
+    rain: shown(w.rainMax),
     time: w.rainHour == null ? '—' : formatHour(w.rainHour),
-    uv: round(w.uvMax),
-    feelsHigh: round(w.feelsHigh),
-    wind: round(w.windMax),
-    gust: round(w.gustMax),
+    uv: shown(w.uvMax),
+    feelsHigh: shown(w.feelsHigh),
+    wind: shown(w.windMax),
+    gust: shown(w.gustMax),
   };
   return REMINDER_WORDINGS[type][variant].replace(/\{(\w+)\}/g, (_, key) => values[key]);
 }

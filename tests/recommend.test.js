@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   categoryFor, needsLayer, triggeredReminders, windowHours, weatherInputs, rankCondition,
-  defaultWindow, nowIn, formatHour, reminderText, layerTime, buildState,
+  defaultWindow, nowIn, formatHour, reminderText, layerTime, buildState, shown,
 } from '../js/recommend.js';
 import { createVariations, variationKey } from '../js/variation.js';
 import { OUTFITS } from '../js/content.js';
@@ -159,12 +159,12 @@ test('condition is the most significant weather code', () => {
 
 // ---------- Text ----------
 
-test('reminder wording fills in rounded values and the rain hour', () => {
+test('reminder wording fills in values rounded down and the rain hour', () => {
   const w = calm({ rainMax: 62, rainHour: 21, uvMax: 6.6, feelsHigh: 83.4, windMax: 21.5, gustMax: 33 });
   assert.equal(reminderText('umbrella', 0, w), 'Grab an umbrella: 62% chance of rain around 9pm.');
-  assert.equal(reminderText('sunscreen', 1, w), 'Strong sun (UV 7). Sunscreen, hat, sunglasses.');
+  assert.equal(reminderText('sunscreen', 1, w), 'Strong sun (UV 6). Sunscreen, hat, sunglasses.');
   assert.equal(reminderText('hydration', 2, w), 'Hot out there: 83°. Keep drinking while you’re out.');
-  assert.equal(reminderText('bikeWind', 0, w), 'Gusty ride: wind up to 22 mph, gusts 33.');
+  assert.equal(reminderText('bikeWind', 0, w), 'Gusty ride: wind up to 21 mph, gusts 33.');
   assert.ok(!/headwind/i.test(Object.values({ a: reminderText('bikeWind', 1, w), b: reminderText('bikeWind', 2, w) }).join(' ')));
 });
 
@@ -177,6 +177,17 @@ test('formatHour and layer timing read naturally', () => {
   assert.equal(layerTime('day', 8, false), 'the morning');
   assert.equal(layerTime('day', 20, true), 'this evening');
   assert.equal(layerTime('evening', 23, true), 'later tonight');
+});
+
+test('shown values are never past a threshold their rule did not reach', () => {
+  for (const [value, threshold] of [[29.8, 30], [2.95, 3], [79.6, 80], [19.99, 20], [39.5, 40], [84.9, 85]]) {
+    assert.ok(Number(shown(value)) < threshold, `${value} shows ${shown(value)}`);
+  }
+  for (const [value, threshold] of [[30, 30], [3.0, 3], [80.4, 80]]) {
+    assert.ok(Number(shown(value)) >= threshold, `${value} shows ${shown(value)}`);
+  }
+  assert.equal(shown(null), '—');
+  assert.equal(shown(-3.2), '-4'); // rounds down below zero too, so cold thresholds stay consistent
 });
 
 // ---------- One recommendation state (R11, R14, R31) ----------

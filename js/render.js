@@ -1,5 +1,7 @@
 // Draws Main from the recommendation state only (R11). No rules or weather maths here.
 
+import { shown } from './recommend.js';
+
 const $ = (id) => document.getElementById(id);
 
 // ---------- Lookups for display ----------
@@ -34,8 +36,8 @@ function uvLevel(uv) {
   return 'extreme';
 }
 
-const round = (v) => Math.round(v);
-const show = (v, format) => (v == null ? '—' : format(v)); // missing values show "—" (R23)
+// Numbers are shown rounded down (see shown() in recommend.js); missing values show "—" (R23).
+const show = (v, format) => (v == null ? '—' : format(shown(v)));
 
 /** "Mon", "5", "Mon, Oct 5" and "Monday, October 5" for a "YYYY-MM-DD" date. */
 export function dayLabels(date) {
@@ -79,12 +81,12 @@ function drawWeather(w) {
     icon.alt = condition[1];
   }
   const feels = $('feels');
-  feels.textContent = `${show(w.feelsHigh, (v) => `${round(v)}°`)} / ${show(w.feelsLow, (v) => `${round(v)}°`)}`;
-  feels.setAttribute('aria-label', `high ${show(w.feelsHigh, round)}°, low ${show(w.feelsLow, round)}°`);
-  $('rain').textContent = show(w.rainMax, (v) => `${round(v)}%`);
-  $('uv').textContent = show(w.uvMax, (v) => `${round(v)} ${uvLevel(v)}`);
-  $('wind').textContent = show(w.windMax, (v) => `${round(v)} mph`) +
-    (w.gustMax == null ? '' : `, gusts ${round(w.gustMax)}`);
+  feels.textContent = `${show(w.feelsHigh, (v) => `${v}°`)} / ${show(w.feelsLow, (v) => `${v}°`)}`;
+  feels.setAttribute('aria-label', `high ${shown(w.feelsHigh)}°, low ${shown(w.feelsLow)}°`);
+  $('rain').textContent = show(w.rainMax, (v) => `${v}%`);
+  $('uv').textContent = show(w.uvMax, (v) => `${v} ${uvLevel(Number(v))}`);
+  $('wind').textContent = show(w.windMax, (v) => `${v} mph`) +
+    (w.gustMax == null ? '' : `, gusts ${shown(w.gustMax)}`);
 }
 
 function drawReminders(reminders) {
@@ -170,8 +172,8 @@ function renderControls({ days = [], date, window }) {
     const condition = CONDITION_ICONS[d.condition];
     // The icon and range show on the laptop week strip only; the phone strip shows the day alone.
     const icon = condition ? `<img class="day-icon" src="assets/icons/meteocons/${condition[0]}.svg" alt="">` : '';
-    const range = `${show(d.feelsHigh, (v) => `${round(v)}°`)}/${show(d.feelsLow, (v) => `${round(v)}°`)}`;
-    const spoken = d.feelsHigh == null ? '' : `, ${condition ? condition[1] + ', ' : ''}feels like ${round(d.feelsHigh)} to ${round(d.feelsLow)}`;
+    const range = `${show(d.feelsHigh, (v) => `${v}°`)}/${show(d.feelsLow, (v) => `${v}°`)}`;
+    const spoken = d.feelsHigh == null ? '' : `, ${condition ? condition[1] + ', ' : ''}feels like ${shown(d.feelsHigh)} to ${shown(d.feelsLow)}`;
     return `<button type="button" data-date="${d.date}" aria-pressed="${d.date === date}" aria-label="${label.long}${spoken}">
       <span class="day-name"><span>${label.weekday}</span> <span class="day-num">${label.day}</span></span>
       ${icon}<span class="day-range">${range}</span></button>`;

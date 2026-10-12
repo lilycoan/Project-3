@@ -334,6 +334,7 @@ After implementation or testing, record requirement changes and the evidence tha
   - *Assets.* A second head (Open Peeps "Medium", CC0), a second waving head, and 2 new outfits for the Short wavy style to replace the dress (Hot 3) and the skirt (Warm 2). The Medium-hair style keeps the current 12 outfits. The new outfits' wording, and where the style control sits on Main and Info, are decided at that checkpoint and approved by the Developer.
   - *Why:* the Developer wants Users to see clothing that fits how they dress.
 - **2026-10-11 (build, CP7): two reminder wordings made neutral** (approved by the Developer). Sunscreen wording 1 dropped "today", and hydration wording 3 dropped "throughout the day", because both also show for forecast dates and the Evening window. Sunscreen 1 now reads "UV hits {uv}. Put on sunscreen before you head out." Hydration 3 now reads "Hot out there: {feelsHigh}°. Keep drinking while you're out."
+- **2026-10-11 (build, CP8): shown numbers are rounded down** (approved by the Developer). Live Austin showed "gusts 30" with no bike reminder, because the raw gust was 29.8 mph and normal rounding pushed the display past the threshold. Every value shown (tiles, week strip, reminder wording) is now a whole number rounded down, so a shown value is always on the same side of a threshold as its rule. Rules still use the exact values. *R13 check becomes:* the values equal the max/min of the API's hourly values over the window, rounded down. The R15 threshold checks are unchanged.
 
 ## Approval
 
